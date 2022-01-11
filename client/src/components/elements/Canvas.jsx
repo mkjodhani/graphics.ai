@@ -1,61 +1,59 @@
-import React,{useRef,useEffect} from "react";
-export default function Canvas({collegeNameLine1, collegeNameLine2, action1, action2, action3, user, reason1, reason2, date, certificate_no}) {
-    const canvasRef = useRef(null)
-    // var canvas = document.createElemet('canvas');
-    var context = canvasRef.current.getContext('2d');
-    var image = new Image();
-    useEffect(() => {
-        image.src = "./src/img/certificates_images/blank/Certificate9.png";
+import React, { useRef, useEffect, useState } from 'react'
+
+export default function Canvas(props) {
+    const canvasRef = useRef(null);
+    const [context, setContext] = useState(null)
+    const image = new Image();
+    const drawCanvas = ({ theme, firstTitle, secondTitle, first_desc, second_desc, action3, name, third_desc, forth_desc, date, certificateNumber }) => {
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+        
+        image.src = "img/certificates/blank/Certificate"+theme+".png";
         image.onload = function () {
+            if(!context) return;
             context.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height)
             //College Name Line 1
             context.fillStyle = "#3F3F41"
             context.font = "1000% BlackSwan";
             context.textAlign = "center";
-            context.fillText(collegeNameLine1, 1100, 450);
+            context.fillText(firstTitle, 1100, 350);
 
             //College Name Line 2
             context.fillStyle = "#3F3F41"
             context.font = "750% BlackSwan";
             context.textAlign = "center";
-            context.fillText(collegeNameLine2, 1100, 600);
+            context.fillText(secondTitle, 1100, 500);
 
             //Action Name Line 1
             context.fillStyle = "#3F3F41"
             context.font = "350% DancingScript";
             context.textAlign = "center";
-            context.fillText(action1, 1100, 700);
+            context.fillText(first_desc, 1100, 600);
 
             //Action Name Line 2
             context.fillStyle = "#3F3F41"
             context.font = "350% DancingScript";
             context.textAlign = "center";
-            context.fillText(action2, 1100, 780);
-
-            //Action Name Line 3
-            context.fillStyle = "#3F3F41"
-            context.font = "350% DancingScript";
-            context.textAlign = "center";
-            context.fillText(action3, 1100, 860);
+            context.fillText(second_desc, 1100, 680);
 
             //User Name 1
             context.fillStyle = "#3F3F41"
             context.font = "bold 700% DancingScript";
             context.textAlign = "center";
-            context.fillText(user, 1100, 990);
+            context.fillText(name, 1100, 890);
 
             //Reason Line 1
             context.fillStyle = "#3F3F41"
             context.font = "350% DancingScript";
             context.textAlign = "center";
-            context.fillText(reason1, 1100, 1100);
+            context.fillText(third_desc, 1100, 1000);
 
 
             //Reason Line 2
             context.fillStyle = "#3F3F41"
             context.font = "350% DancingScript";
             context.textAlign = "center";
-            context.fillText(reason2, 1100, 1180);
+            context.fillText(forth_desc, 1100, 1070);
 
             //Date Line 1
             context.fillStyle = "#3F3F41"
@@ -73,16 +71,23 @@ export default function Canvas({collegeNameLine1, collegeNameLine2, action1, act
             context.fillStyle = "#3F3F41"
             context.font = "240% DancingScript";
             context.textAlign = "center";
-            context.fillText(certificate_no, 1600, 1300);
+            context.fillText(certificateNumber, 1600, 1300);
 
             //Date Line 2
             context.fillStyle = "#3F3F41"
             context.font = "bold 350% DancingScript";
             context.textAlign = "center";
             context.fillText("Certificate No.", 1600, 1360);
+            
+            setContext(context);
         }
-    }, [])
+    }
+    useEffect(() => {
+        drawCanvas({ ...props.config })
+    }, [props])
     return (
-        <canvas id="canvas" ref={(ref) => canvasRef || ref} width="2200" height="1700" style="border:1px solid #000000;" />
+        <div style={{ 'width': '800px', height: '600px' }}>
+            <canvas ref={canvasRef} {...props} width={2200} height={1700} style={{ 'width': '800px', height: '600px', 'border': '1px solid black' }} />
+        </div>
     )
 }
