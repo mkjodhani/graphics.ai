@@ -1,50 +1,79 @@
-import { Button, Card, Form, FormLayout, Scrollable } from '@shopify/polaris'
-import React, { useState } from 'react'
+import { Button, Card, Form, FormLayout, Scrollable, Stack } from '@shopify/polaris'
+import React, { useState, useEffect } from 'react'
 import ConfigElement from './ConfigElement'
 import InputElement from './InputElement'
 export default function Config({ config, setConfig }) {
-    const [primaryHeaderButton, setPrimaryHeaderButton] = useState(false);
-    const [secondaryHeaderButton, setSecondaryHeaderButton] = useState(false);
-    const [primaryBodyButton, setPrimaryBodyButton] = useState(false);
-    const [secondaryBodyButton, setSecondaryBodyButton] = useState(false);
-    const [nameButton, setnameButton] = useState(false);
-    const [thirdBodyButton, setThirdBodyButton] = useState(false);
-    const [forthBodyButton, setForthBodyButton] = useState(false);
-    const [dateButton, setDateButton] = useState(false);
-    const [certificateButton, setCertificateButton] = useState(false);
+    const [configTheme, setConfigTheme] = useState(config?.theme || '1')
+    const [configPrimaryHeader, setConfigPrimaryHeader] = useState(config?.configPrimaryHeader || {});
+    const [configSecondaryHeader, setConfigSecondaryHeader] = useState(config?.configSecondaryHeader || {});
+    const [configFirstBody, setConfigFirstBody] = useState(config?.configFirstBody || {});
+    const [configSecondBody, setConfigSecondBody] = useState(config?.configSecondBody || {});
+    const [configName, setConfigName] = useState(config?.configName || {});
+    const [configThirdBody, setConfigThirdBody] = useState(config?.configThirdBody || {});
+    const [configForthBody, setConfigForthBody] = useState(config?.configForthBody || {});
+    const [configDate, setConfigDate] = useState(config?.configDate || {});
+    const [configCertificate, setConfigCertificate] = useState(config?.configCertificate || {});
+    useEffect(() => {
+        setConfig({
+            configTheme,
+            configPrimaryHeader,
+            configSecondaryHeader,
+            configFirstBody,
+            configSecondBody,
+            configName,
+            configThirdBody,
+            configForthBody,
+            configDate,
+            configCertificate
+        })
+    }, [configTheme,
+        configPrimaryHeader,
+        configSecondaryHeader,
+        configFirstBody,
+        configSecondBody,
+        configName,
+        configThirdBody,
+        configForthBody,
+        configDate,
+        configCertificate])
     return (
         <Card title="Setting" sectioned>
-            <InputElement label='Theme' value={config.theme} setValue={(value => setConfig((oldConfig) => ({ ...oldConfig, theme: value })))} />
+            <Scrollable shadow focusable style={{ height: '655px' }} horizontal={false}>
+                <Stack vertical={true}>
+                    <Stack.Item fill>
+                        <InputElement label='Theme' value={configTheme} setValue={setConfigTheme} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Primary Header"} config={configPrimaryHeader} setConfig={setConfigPrimaryHeader} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Secondary Header"} config={configSecondaryHeader} setConfig={setConfigSecondaryHeader} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Primary Body Line"} config={configFirstBody} setConfig={setConfigFirstBody} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Secondary Body Line"} config={configSecondBody} setConfig={setConfigSecondBody} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"User "} config={configName} setConfig={setConfigName} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Third Desc Line"} config={configThirdBody} setConfig={setConfigThirdBody} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Forth Desc Line"} config={configForthBody} setConfig={setConfigForthBody} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Date of Certification"} config={configDate} setConfig={setConfigDate} />
+                    </Stack.Item>
+                    <Stack.Item fill>
+                        <ConfigElement label={"Certificate Number"} config={configCertificate} setConfig={setConfigCertificate} />
+                    </Stack.Item>
+                </Stack>
+            </Scrollable>
 
-            <Button primary={primaryHeaderButton} onClick={() => setPrimaryHeaderButton(!primaryHeaderButton)}>{"Primary Header"}</Button>
-            <ConfigElement open={primaryHeaderButton} label={"Primary Header"} />
 
-            <Button primary={secondaryHeaderButton} onClick={() => setSecondaryHeaderButton(!secondaryHeaderButton)}>{"Secondary Header"}</Button>
-            <ConfigElement open={secondaryHeaderButton} label={"Secondary Header"} />
-
-            <Button primary={primaryBodyButton} onClick={() => setPrimaryBodyButton(!primaryBodyButton)}>{"Primary Body Line"}</Button>
-            <ConfigElement open={primaryBodyButton} label={"Primary Body Line"} />
-
-            <Button primary={secondaryBodyButton} onClick={() => setSecondaryBodyButton(!secondaryBodyButton)}>{"Secondary Body Line"}</Button>
-            <ConfigElement open={secondaryBodyButton} label={"Secondary Body Line"} />
-
-            <Button primary={nameButton} onClick={() => setnameButton(!nameButton)}>{"User "}</Button>
-            <ConfigElement open={nameButton} label={"User "} />
-
-            <Button primary={thirdBodyButton} onClick={() => setThirdBodyButton(!thirdBodyButton)}>{"Third Desc Line"}</Button>
-            <ConfigElement open={thirdBodyButton} label={"Third Desc Line"} />
-
-            <Button primary={forthBodyButton} onClick={() => setForthBodyButton(!forthBodyButton)}>{"Forth Desc Line"}</Button>
-            <ConfigElement open={forthBodyButton} label={"Forth Desc Line"} />
-
-            <Button primary={dateButton} onClick={() => setDateButton(!dateButton)}>{"Date of Certification"}</Button>
-            <ConfigElement open={dateButton} label={"Date of Certification"} />
-
-            <Button primary={certificateButton} onClick={() => setCertificateButton(!certificateButton)}>{"Certificate Number"}</Button>
-            <ConfigElement open={certificateButton} label={"Certificate Number"} />
-
-
-            {/* <Scrollable shadow focusable style={{height: '600px'}} horizontal={false}> */}
             {/* <Form>
                 <FormLayout> */}
             {/* <InputElement label='Theme' value={config.theme} setValue={(value => setConfig((oldConfig) => ({...oldConfig,theme:value}) ))} />
@@ -59,7 +88,6 @@ export default function Config({ config, setConfig }) {
                     <InputElement label= 'Certificate Number'value={config.certificateNumber} setValue={(value => setConfig((oldConfig) => ({...oldConfig,certificateNumber:value}) ))} /> */}
             {/* </FormLayout>
             </Form> */}
-            {/* </Scrollable> */}
         </Card>
     )
 }
