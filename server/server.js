@@ -1,8 +1,15 @@
-const express = require('express')
+const express = require('express');
+const apiRouter = require('./res/routers/api')
 const app = express();
-app.get("/proxy",(req,res,next) =>{
-    res.send("<p>Home  0 00 0 0 00  00 Page</p>")
+const dotenv = require('dotenv');
+dotenv.config();
+app.use(express.static(__dirname+ "/public"))
+app.use('/api',apiRouter)
+app.get('/',(req,res) =>{
+    res.json({
+        status:"ACCEPT"
+    })
 })
-app.listen(4242,()=>{
-    console.log("listening on the port 4242");
+app.listen(process.env.PORT,() =>{
+    console.log("Server is up and running on http://localhost:4242");
 })
