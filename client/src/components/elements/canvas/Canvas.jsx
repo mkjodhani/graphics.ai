@@ -1,6 +1,7 @@
 import { Card } from '@shopify/polaris';
 import React, { useRef, useEffect, useState, Suspense } from 'react'
 import PageLoading from '../supplementary/PageLoading';
+import Skeleton from '../supplementary/Skeleton';
 const makeFont = (config) => {
     var font = "";
     const { bold, italic } = config.textStyle;
@@ -119,7 +120,7 @@ export default function Canvas(props) {
         }, 1500)
     }
     return (
-        <Suspense fallback={<p>Loading</p>}>
+        <Suspense fallback={<Skeleton/>}>
             <Card sectioned>
                 {
                     loading && <PageLoading label={"Downloading..."} />

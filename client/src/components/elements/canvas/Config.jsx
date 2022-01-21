@@ -1,5 +1,6 @@
 import { Card, Collapsible, Scrollable, Stack } from '@shopify/polaris'
 import React, { useState, useEffect, lazy, Suspense, Fragment } from 'react'
+import Skeleton from '../supplementary/Skeleton'
 const ConfigElement = lazy(() => import('./ConfigElement'))
 const InputElement = lazy(() => import('./InputElement'))
 
@@ -39,7 +40,7 @@ export default function Config({ config, setConfig }) {
         configDate,
         configCertificate])
     return (
-        <Suspense fallback={<p>Loading</p>}>
+        <Suspense fallback={<Skeleton/>}>
             <Card title="Setting" sectioned actions={[{ content: showSetting ? "Hide" : 'Show', onAction: () => setShowSetting(settingToggle => !settingToggle) }]}>
                 <div style={{ 'color': 'black', opacity: '0.5', marginBottom: '5px' }}>
                     <b>Note:</b> <>Click on the certificate to download it.</>
@@ -79,7 +80,6 @@ export default function Config({ config, setConfig }) {
                     </Stack>
                 </Collapsible>
             </Card>
-            <br/>
         </Suspense>
     )
 }
