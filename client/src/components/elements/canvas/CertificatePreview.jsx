@@ -1,5 +1,6 @@
 import { Card } from '@shopify/polaris'
 import React, { useState, useEffect,lazy,Suspense} from 'react'
+import Skeleton from '../supplementary/Skeleton'
 const Canvas = lazy(() => import('./Canvas'))
 // import Canvas from './Canvas'
 
@@ -9,7 +10,7 @@ export default function CertificatePreview({ config }) {
         setDiscard(new Date());
     }, [])
     return (
-        <Suspense fallback={<p>Loading</p>}>
+        <Suspense fallback={<Skeleton/>}>
             <Canvas config={config} />
         </Suspense>
     )
