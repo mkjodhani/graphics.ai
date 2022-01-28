@@ -1,20 +1,12 @@
-import { Route, BrowserRouter, Routes } from "react-router-dom";
-import Certificate from "./components/pages/Certificate";
+import { Provider } from "react-redux";
 import Home from "./components/pages/Home";
-import LogIn from "./components/pages/LogIn";
-import SignIn from "./components/pages/SignIn";
+import { store } from "./redux/store";
 
 function App() {
   return (
-    // <BrowserRouter basename="/">
-    //   <Routes>
-    //     <Route exact path="/" element={<Home />} />
-    //     <Route path="/certificate" element={<Certificate />} />
-    //     <Route path="/login" element={<LogIn />} />
-    //     <Route path="/signin" element={<SignIn />} />
-    //   </Routes>
-    // </BrowserRouter>
-    <Home/>
+    <Provider store={store}>
+      <Home />
+    </Provider>
   );
 }
 

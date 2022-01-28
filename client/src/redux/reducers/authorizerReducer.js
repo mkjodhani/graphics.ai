@@ -1,4 +1,4 @@
-export default function userReducer(state={},action){
+export default function authorizerReducer(state={},action){
     switch (action.type) {
         default:
             return state;
