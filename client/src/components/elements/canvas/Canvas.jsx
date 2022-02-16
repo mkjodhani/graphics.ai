@@ -29,7 +29,7 @@ export default function Canvas(props) {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
-        image.src = "img/certificates/blank/Certificate" + configTheme + ".png";
+        image.src = "/certified/img/certificates/blank/Certificate" + configTheme + ".png";
         image.onload = function () {
             if (!context) return;
             context.drawImage(image, 0, 0, canvasRef.current.width, canvasRef.current.height)

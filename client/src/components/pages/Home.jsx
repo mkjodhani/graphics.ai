@@ -1,15 +1,21 @@
 import { Frame, Navigation, TopBar } from '@shopify/polaris'
 import React, { useState, useCallback } from 'react'
-import { NoteMajor, ActivitiesMajor, StoreMajor, PhoneMajor, AnalyticsMajor, PageUpMajor, ProfileMajor, OrdersMajor, HomeMajor } from '@shopify/polaris-icons';
-import { Route, Router, Routes } from 'react-router-dom';
-import Certificate from './Certificate';
-import LogIn from './LogIn';
-import SignIn from './SignIn';
-import Dashboard from '../nav/Dashboard';
+import { NoteMajor, StoreMajor, PhoneMajor, AnalyticsMajor, PageUpMajor, ProfileMajor, LogOutMinor, HomeMajor ,OrdersMajor} from '@shopify/polaris-icons';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Routes_ from '../Routes';
+import { useSelector } from 'react-redux';
+import { USER_TYPE } from '../../scripts/constants';
 
-export default function Home() {
+export default function UserHome() {
     //userMenu
+    const location = useLocation();
+    const navigate = useNavigate();
+    const user = useSelector(state => state.user);
+    if(!user.userID)
+    navigate("/login");
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+    const [showMobileNavigation, setShowMobileNavigation] = useState(true);
+    
     const toggleIsUserMenuOpen = useCallback(
         () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
         [],
@@ -17,19 +23,10 @@ export default function Home() {
     const userMenuMarkup = (<TopBar.UserMenu
         actions={[
             {
-                items: [{ content: 'Profile', icon: ProfileMajor }]
+                items: [{ content: 'Profile', icon: ProfileMajor, onAction: () => navigate('profile') }]
             },
             {
-                items: [{ content: 'Achievements', icon: NoteMajor }]
-            },
-            {
-                items: [{ content: 'Features', icon: ActivitiesMajor }]
-            },
-            {
-                items: [{ content: 'Analytics', icon: AnalyticsMajor }]
-            },
-            {
-                items: [{ content: 'About Us' }]
+                items: [{ content: 'Log out', icon: LogOutMinor, onAction: () => navigate('logout') }]
             }
         ]}
         name='mkjodhani'
@@ -39,27 +36,89 @@ export default function Home() {
         onToggle={toggleIsUserMenuOpen}
     />)
     const topBarMarkup = (<TopBar
-        showNavigationToggle
-        userMenu={userMenuMarkup} />)
-    const navigationMarkup = (
-        <Navigation location="/">
+        showNavigationToggle={true}
+        onNavigationToggle={() => setShowMobileNavigation(true)}
+        userMenu={userMenuMarkup}
+    />)
+
+    const navigationMarkups = {
+        'admin': <Navigation location="/admin/dashboard">
             <Navigation.Section
+                title='Admin Panel'
                 items={[
                     {
-                        url: '/dashboard',
                         label: 'Dashboard',
                         icon: HomeMajor,
-                        selected: true
+                        exactMatch: true,
+                        selected: location.pathname.trim() === "/admin/dashboard",
+                        onClick: () => navigate("/admin/dashboard")
                     },
                     {
-                        url: '/certificates',
-                        label: 'Certificates',
+                        label: 'Issues',
                         icon: NoteMajor,
+                        selected: location.pathname.trim() === "/admin/issues",
+                        onClick: () => navigate("/admin/issues")
+                    }
+                ]}
+            />
+            <Navigation.Section
+                title="Features"
+                items={[
+                    {
+                        label: 'Analytics',
+                        icon: AnalyticsMajor,
+                        selected: location.pathname.trim() === "/admin/analytics",
+                        onClick: () => navigate('/admin/analytics')
                     },
                     {
-                        url: '/requests',
+                        label: 'Inbox',
+                        icon: OrdersMajor,
+                        selected: location.pathname.trim() === "/admin/inbox",
+                        onClick: () => navigate('/admin/inbox')
+                    }
+                ]}
+            />
+
+            <Navigation.Section
+                title="Other"
+                items={[
+                    {
+                        label: 'About Us',
+                        icon: StoreMajor,
+                        selected: location.pathname.trim() === "/aboutus",
+                        onClick: () => navigate('aboutus')
+                    },
+                    {
+                        label: 'Contact Us',
+                        icon: PhoneMajor,
+                        selected: location.pathname.trim() === "/contactus",
+                        onClick: () => navigate('contactus')
+                    },
+                ]}
+            />
+        </Navigation>,
+        'organization': <Navigation location="/organization/dashboard">
+            <Navigation.Section
+                title='Organization'
+                items={[
+                    {
+                        label: 'Dashboard',
+                        icon: HomeMajor,
+                        exactMatch: true,
+                        selected: location.pathname.trim() === "/organization/dashboard",
+                        onClick: () => navigate("/organization/dashboard")
+                    },
+                    {
+                        label: 'Departments',
+                        icon: NoteMajor,
+                        selected: location.pathname.trim() === "/organization/departments",
+                        onClick: () => navigate('/organization/departments')
+                    },
+                    {
                         label: 'Requests',
                         icon: PageUpMajor,
+                        selected: location.pathname.trim() === "/organization/requests",
+                        onClick: () => navigate('/organization/requests')
                     },
                 ]}
             />
@@ -67,9 +126,129 @@ export default function Home() {
                 title="Features"
                 items={[
                     {
-                        url: '/analytics',
                         label: 'Analytics',
                         icon: AnalyticsMajor,
+                        selected: location.pathname.trim() === "/organization/analytics",
+                        onClick: () => navigate('/organization/analytics')
+                    },
+                    {
+                        label: 'Inbox',
+                        icon: OrdersMajor,
+                        selected: location.pathname.trim() === "/organization/inbox",
+                        onClick: () => navigate('/organization/inbox')
+                    },
+                ]}
+            />
+            <Navigation.Section
+                title="Other"
+                items={[
+                    {
+                        label: 'About Us',
+                        icon: StoreMajor,
+                        selected: location.pathname.trim() === "/aboutus",
+                        onClick: () => navigate('aboutus')
+                    },
+                    {
+                        label: 'Contact Us',
+                        icon: PhoneMajor,
+                        selected: location.pathname.trim() === "/contactus",
+                        onClick: () => navigate('contactus')
+                    },
+                ]}
+            />
+        </Navigation>,
+        'authorizer': <Navigation location="/authorizer/dashboard">
+            <Navigation.Section
+                items={[
+                    {
+                        label: 'Dashboard',
+                        icon: HomeMajor,
+                        exactMatch: true,
+                        selected: location.pathname.trim() === "/authorizer/dashboard",
+                        onClick: () => navigate("/authorizer/dashboard")
+                    },
+                    {
+                        label: 'Requests',
+                        icon: PageUpMajor,
+                        selected: location.pathname.trim() === "/authorizer/requests",
+                        onClick: () => navigate('/authorizer/requests')
+                    },
+                ]}
+            />
+            <Navigation.Section
+                title="Features"
+                items={[
+                    {
+                        label: 'Analytics',
+                        icon: AnalyticsMajor,
+                        selected: location.pathname.trim() === "/authorizer/analytics",
+                        onClick: () => navigate('/authorizer/analytics')
+                    },
+                    {
+                        label: 'Inbox',
+                        icon: OrdersMajor,
+                        selected: location.pathname.trim() === "/authorizer/inbox",
+                        onClick: () => navigate('/authorizer/inbox')
+                    }
+                ]}
+            />
+
+            <Navigation.Section
+                title="Other"
+                items={[
+                    {
+                        label: 'About Us',
+                        icon: StoreMajor,
+                        selected: location.pathname.trim() === "/aboutus",
+                        onClick: () => navigate('aboutus')
+                    },
+                    {
+                        label: 'Contact Us',
+                        icon: PhoneMajor,
+                        selected: location.pathname.trim() === "/contactus",
+                        onClick: () => navigate('contactus')
+                    },
+                ]}
+            />
+        </Navigation>,
+        'user': <Navigation location="/user/dashboard">
+            <Navigation.Section
+                items={[
+                    {
+                        label: 'Dashboard',
+                        icon: HomeMajor,
+                        exactMatch: true,
+                        selected: location.pathname.trim() === "/user/dashboard",
+                        onClick: () => navigate("/user/dashboard")
+                    },
+                    {
+                        label: 'Certificates',
+                        icon: NoteMajor,
+                        selected: location.pathname.trim() === "/user/certificates",
+                        onClick: () => navigate('/user/certificates')
+                    },
+                    {
+                        label: 'Requests',
+                        icon: PageUpMajor,
+                        selected: location.pathname.trim() === "/user/requests",
+                        onClick: () => navigate('/user/requests')
+                    },
+                ]}
+            />
+            <Navigation.Section
+                title="Features"
+                items={[
+                    {
+                        label: 'Analytics',
+                        icon: AnalyticsMajor,
+                        selected: location.pathname.trim() === "/user/analytics",
+                        onClick: () => navigate('/user/analytics')
+                    },
+                    {
+                        label: 'Inbox',
+                        icon: OrdersMajor,
+                        selected: location.pathname.trim() === "/user/inbox",
+                        onClick: () => navigate('/user/inbox')
                     },
                 ]}
             />
@@ -78,29 +257,29 @@ export default function Home() {
                 title="Other"
                 items={[
                     {
-                        url: '/aboutus',
                         label: 'About Us',
                         icon: StoreMajor,
+                        selected: location.pathname.trim() === "/aboutus",
+                        onClick: () => navigate('aboutus')
                     },
                     {
-                        url: '/aboutus',
                         label: 'Contact Us',
                         icon: PhoneMajor,
+                        selected: location.pathname.trim() === "/contactus",
+                        onClick: () => navigate('contactus')
                     },
                 ]}
             />
         </Navigation>
-    )
+    }
     return (
         <Frame
-            topBar={topBarMarkup}
-            navigation={navigationMarkup}>
-                <Routes>
-                    <Route exact path="/dashboard" element={<Dashboard />} />
-                    <Route path="/certificates" element={<Certificate />} />
-                    <Route path="/login" element={<LogIn />} />
-                    <Route path="/signin" element={<SignIn />} />
-                </Routes>
+            topBar={topBarMarkup}//{user.userID ? topBarMarkup:null}
+            showMobileNavigation={true}//{user.userID ? showMobileNavigation:false}
+            onNavigationDismiss={() => setShowMobileNavigation(false)}
+            navigation= {navigationMarkups[USER_TYPE.ADMIN]}//{navigationMarkups[user?.userType]}
+            >
+            <Routes_/>
         </Frame>
     )
 }

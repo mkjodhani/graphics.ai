@@ -1,8 +1,5 @@
-export default function(state,action){
-    switch(action.type){
-        case LOG_IN:
-            
-            break;
+export default function userReducer(state={},action){
+    switch (action.type) {
         default:
             return state;
     }

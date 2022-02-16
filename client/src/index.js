@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import Index from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { AppProvider } from "@shopify/polaris";
 import { BrowserRouter } from "react-router-dom";
@@ -11,7 +11,7 @@ import "./css/font.css";
 ReactDOM.render(
   <BrowserRouter basename="/">
     <AppProvider i18n={enTranslations}>
-      <App />
+      <Index />
     </AppProvider>
   </BrowserRouter>,
   document.getElementById("root")

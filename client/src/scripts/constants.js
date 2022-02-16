@@ -1,4 +1,7 @@
-export const USER_TYPE_ADMIN = 1
-export const USER_TYPE_ORGANIZATION = 2
-export const USER_TYPE_AUTHORIZER = 3
-export const USER_TYPE_ENDUSER = 4
+export const USER_TYPE = {
+  ADMIN: 'admin',
+  ORGANIZATION: 'organization',
+  AUTHORIZER: 'authorizer',
+  USER: 'user',
+};
+export const SITE_NAME = "Certificate Verifier"
