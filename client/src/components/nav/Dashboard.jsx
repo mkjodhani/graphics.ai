@@ -11,12 +11,14 @@ export default function Dashboard() {
     const { userType } = useParams();
     return (
         <Page>
+            <div style={{'paddingTop':'50px'}}>
             <Suspense fallback={<Skeleton />}>
                 {userType === USER_TYPE.ADMIN && <AdminDashboard />}
                 {userType === USER_TYPE.ORGANIZATION && <OrganizationDashboard />}
                 {userType === USER_TYPE.AUTHORIZER && <AuthorizerDashboard />}
                 {userType === USER_TYPE.USER && <UserDashboard />}
             </Suspense>
+            </div>
         </Page>
     )
 }

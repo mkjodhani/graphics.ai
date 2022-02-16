@@ -4,3 +4,4 @@ export const USER_TYPE = {
   AUTHORIZER: 'authorizer',
   USER: 'user',
 };
+export const SITE_NAME = "Certificate Verifier"

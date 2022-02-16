@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
-import { Button, Form, FormLayout, Frame, Icon, Page, Stack, TextField, Toast } from '@shopify/polaris'
+import { Button, Form, FormLayout, Frame, Icon, Page, Select, Stack, TextField, Toast } from '@shopify/polaris'
 import { CircleCancelMajor } from '@shopify/polaris-icons';
 import axios from 'axios';
+import { USER_TYPE } from '../../../scripts/constants';
 export default function SignIn() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
+    const [userType, setUserType] = useState(USER_TYPE.USER);
     const [DOB, setDOB] = useState(new Date());
     const [tel, setTel] = useState('');
     const [showToast, setShowToast] = useState(false);
@@ -16,31 +18,41 @@ export default function SignIn() {
     const signIn = async (event) => {
         setLoading(true);
         console.log({ name, username, email });
-        if (name && username && email && DOB && tel) {
-            // const formData = new FormData();
-            // formData.append("name",name);
-            // formData.append("username",username);
-            // formData.append("email",email);
-            // formData.append("dob",DOB);
-            // formData.append("tel",tel);
-            // const res = await axios.post("/api/signin",formData);
-            alert("USER SIGN UP API CALL");
-            setLoading(false);
-        }
-        else {
-            if (!name)
-                setToastMessage("Enter the data in Name Field!");
-            else if (!username)
-                setToastMessage("Enter the data in UserName Field!");
-            else if (!email)
-                setToastMessage("Enter the data in Email Field!");
-            else if (!DOB)
-                setToastMessage("Enter the data in Date of Birth!");
-            else if (!tel)
-                setToastMessage("Enter the contact number!");
-
-            setIsError(true);
-            setShowToast(true);
+        await fetch("/profile",{
+            'method':'POST',
+            body:JSON.stringify({
+                'username':username
+            })
+        })
+        try {
+            if (name && username && email && DOB && tel) {
+                const formData = new FormData();
+                formData.append("displayName",name);
+                formData.append("username",username);
+                formData.append("email",email);
+                formData.append("dateOfBirth",DOB);
+                formData.append("contactNumber",tel);
+                formData.append("userType",userType);
+                // const res = await axios.post("api/user/register",);
+                // console.log(res,"RES");
+                setLoading(false);
+            }
+            else {
+                if (!name)
+                    setToastMessage("Enter the data in Name Field!");
+                else if (!username)
+                    setToastMessage("Enter the data in UserName Field!");
+                else if (!email)
+                    setToastMessage("Enter the data in Email Field!");
+                else if (!DOB)
+                    setToastMessage("Enter the data in Date of Birth!");
+                else if (!tel)
+                    setToastMessage("Enter the contact number!");
+                setIsError(true);
+                setShowToast(true);
+                setLoading(false);
+            }
+        } catch (error) {
             setLoading(false);
         }
     }
@@ -54,6 +66,16 @@ export default function SignIn() {
                 <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>Certificate Varifier</p>
             </div>
             <FormLayout>
+                {/* <TextField requiredIndicator label="User Type" value={name} onChange={setName} suffix={name && <div onClick={() => setName('')}><Icon source={CircleCancelMajor} /></div>} /> */}
+                <Select label='User Type' options={[
+                    {label:'User',value:USER_TYPE.USER},
+                    {label:'Authorizer',value:USER_TYPE.AUTHORIZER},
+                    {label:'Organization',value:USER_TYPE.ORGANIZATION},
+                    {label:'Admin',value:USER_TYPE.ADMIN},
+                ]}
+                value={userType}
+                onChange={setUserType}
+                />
                 <TextField requiredIndicator label="Name" value={name} onChange={setName} suffix={name && <div onClick={() => setName('')}><Icon source={CircleCancelMajor} /></div>} />
                 <TextField requiredIndicator label="Username" value={username} onChange={setUsername} suffix={username && <div onClick={() => setUsername('')}><Icon source={CircleCancelMajor} /></div>} />
                 <TextField requiredIndicator label="Email" type='email' name='email' value={email} onChange={setEmail} suffix={email && <div onClick={() => setEmail('')}><Icon source={CircleCancelMajor} /></div>} />
@@ -66,7 +88,7 @@ export default function SignIn() {
                     </Stack.Item>
                 </Stack>
                 <div style={{ 'float': 'right' }}>
-                    <Button submit primary loading={loading}>Sign In</Button>
+                    <Button submit primary loading={loading} onClick={signIn}>Register</Button>
                 </div>
                 {/* <TextField label="Password" type='password' value={password} onChange={setPassword} suffix={password && <div onClick={() => setPassword('')}><Icon source={CircleCancelMajor} /></div>} /> */}
             </FormLayout>

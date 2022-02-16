@@ -4,8 +4,9 @@ import { NoteMajor, StoreMajor, PhoneMajor, AnalyticsMajor, PageUpMajor, Profile
 import { useLocation, useNavigate } from 'react-router-dom';
 import Routes_ from '../Routes';
 import { useSelector } from 'react-redux';
+import { USER_TYPE } from '../../scripts/constants';
 
-export default function Home() {
+export default function UserHome() {
     //userMenu
     const location = useLocation();
     const navigate = useNavigate();
@@ -273,10 +274,11 @@ export default function Home() {
     }
     return (
         <Frame
-            topBar={user.userID ? topBarMarkup:null}
-            showMobileNavigation={user.userID ? showMobileNavigation:false}
+            topBar={topBarMarkup}//{user.userID ? topBarMarkup:null}
+            showMobileNavigation={true}//{user.userID ? showMobileNavigation:false}
             onNavigationDismiss={() => setShowMobileNavigation(false)}
-            navigation={navigationMarkups[user?.userType]}>
+            navigation= {navigationMarkups[USER_TYPE.ADMIN]}//{navigationMarkups[user?.userType]}
+            >
             <Routes_/>
         </Frame>
     )
