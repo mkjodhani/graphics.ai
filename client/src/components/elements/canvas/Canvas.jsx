@@ -125,7 +125,7 @@ export default function Canvas(props) {
                 {
                     loading && <PageLoading label={"Downloading..."} />
                 }
-                <div style={{ 'boxSizing': 'border-box', 'width': '100%', height: '100%', 'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center' }}>
+                <div style={{ 'boxSizing': 'border-box', 'width': '100%', 'height': '100%', 'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center' }}>
                     <div>
                         <canvas ref={canvasRef} onClick={onDownload}  {...props} width={2200} height={1700} style={{ 'height': '600px', 'border': '1px solid black' }} />
                     </div>
