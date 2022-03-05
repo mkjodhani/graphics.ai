@@ -3,8 +3,9 @@ import { Button, Form, FormLayout, Frame, Icon, Page, Select, Stack, TextField, 
 import { CircleCancelMajor } from '@shopify/polaris-icons';
 import axios from 'axios';
 import { USER_TYPE } from '../../../scripts/constants';
+import { Link } from 'react-router-dom';
 export default function SignIn() {
-    const [name, setName] = useState('');
+    const [displayName, setDisplayName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [userType, setUserType] = useState(USER_TYPE.USER);
@@ -15,30 +16,29 @@ export default function SignIn() {
     const [toastMessage, setToastMessage] = useState('');
     const [loading, setLoading] = useState(false);
     // const [password, setPassword] = useState('');
-    const signIn = async (event) => {
+    const register = async (event) => {
         setLoading(true);
-        console.log({ name, username, email });
-        await fetch("/profile",{
-            'method':'POST',
-            body:JSON.stringify({
-                'username':username
-            })
-        })
         try {
-            if (name && username && email && DOB && tel) {
+            if (displayName && username && email && DOB && tel && userType) {
+                const user = {
+                    displayName, username, email, DOB, tel, userType
+                }
                 const formData = new FormData();
-                formData.append("displayName",name);
-                formData.append("username",username);
-                formData.append("email",email);
-                formData.append("dateOfBirth",DOB);
-                formData.append("contactNumber",tel);
-                formData.append("userType",userType);
-                // const res = await axios.post("api/user/register",);
-                // console.log(res,"RES");
-                setLoading(false);
+                formData.append("user", JSON.stringify(user));
+                const res = await axios.post("api/user/register", formData);
+                if (res.data.status === 200) {
+                    setToastMessage("User registration successful!");
+                    setIsError(false);
+                    setShowToast(true);
+                }
+                else {
+                    setToastMessage(res.data.message);
+                    setIsError(false);
+                    setShowToast(true);
+                }
             }
             else {
-                if (!name)
+                if (!displayName)
                     setToastMessage("Enter the data in Name Field!");
                 else if (!username)
                     setToastMessage("Enter the data in UserName Field!");
@@ -53,45 +53,59 @@ export default function SignIn() {
                 setLoading(false);
             }
         } catch (error) {
+        }
+        finally {
             setLoading(false);
         }
     }
     return (
-        <div style={{ 'display': 'flex', justifyContent: 'space-around', alignItems: 'center', width: '80vw', height: '100vh', margin: 'auto' }}>
-            <div>
-                <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} />
+        <>
+            <div style={{ 'display': 'flex', justifyContent: 'space-around', alignItems: 'center', width: '80vw', height: '100vh', margin: 'auto' }}>
+                <div>
+                    <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} />
+                    </div>
+                    <br />
+                    <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>Certificate Varifier</p>
                 </div>
-                <br />
-                <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>Certificate Varifier</p>
+                <FormLayout>
+                    {/* <TextField requiredIndicator label="User Type" value={name} onChange={setDisplayName} suffix={name && <div onClick={() => setDisplayName('')}><Icon source={CircleCancelMajor} /></div>} /> */}
+                    <Select label='User Type' options={[
+                        { label: 'User', value: USER_TYPE.USER },
+                        { label: 'Authorizer', value: USER_TYPE.AUTHORIZER },
+                        { label: 'Organization', value: USER_TYPE.ORGANIZATION },
+                        { label: 'Admin', value: USER_TYPE.ADMIN },
+                    ]}
+                        value={userType}
+                        onChange={setUserType}
+                    />
+                    <TextField requiredIndicator label="Name" value={displayName} onChange={setDisplayName} suffix={displayName && <div onClick={() => setDisplayName('')}><Icon source={CircleCancelMajor} /></div>} />
+                    <TextField requiredIndicator label="Username" value={username} onChange={setUsername} suffix={username && <div onClick={() => setUsername('')}><Icon source={CircleCancelMajor} /></div>} />
+                    <TextField requiredIndicator label="Email" type='email' name='email' value={email} onChange={setEmail} suffix={email && <div onClick={() => setEmail('')}><Icon source={CircleCancelMajor} /></div>} />
+                    <Stack>
+                        <Stack.Item fill>
+                            <TextField requiredIndicator label="Date of Birth" type='date' name='dob' value={DOB} onChange={setDOB} />
+                        </Stack.Item>
+                        <Stack.Item fill>
+                            <TextField requiredIndicator label="Contact Number" type='tel' name='tel' value={tel} onChange={setTel} suffix={tel && <div onClick={() => setTel('')}><Icon source={CircleCancelMajor} /></div>} />
+                        </Stack.Item>
+                    </Stack>
+                    <div style={{ 'float': 'right' }}>
+                        <Button submit primary loading={loading} onClick={register}>Register</Button>
+
+                    </div>
+                    <div style={{ 'textAlign': 'center' }}>
+                        <br /><br /><br />
+                        <p>Already have an Account?     <Link to={"/login"} >Sign in</Link></p>
+                    </div>
+                </FormLayout>
             </div>
-            <FormLayout>
-                {/* <TextField requiredIndicator label="User Type" value={name} onChange={setName} suffix={name && <div onClick={() => setName('')}><Icon source={CircleCancelMajor} /></div>} /> */}
-                <Select label='User Type' options={[
-                    {label:'User',value:USER_TYPE.USER},
-                    {label:'Authorizer',value:USER_TYPE.AUTHORIZER},
-                    {label:'Organization',value:USER_TYPE.ORGANIZATION},
-                    {label:'Admin',value:USER_TYPE.ADMIN},
-                ]}
-                value={userType}
-                onChange={setUserType}
-                />
-                <TextField requiredIndicator label="Name" value={name} onChange={setName} suffix={name && <div onClick={() => setName('')}><Icon source={CircleCancelMajor} /></div>} />
-                <TextField requiredIndicator label="Username" value={username} onChange={setUsername} suffix={username && <div onClick={() => setUsername('')}><Icon source={CircleCancelMajor} /></div>} />
-                <TextField requiredIndicator label="Email" type='email' name='email' value={email} onChange={setEmail} suffix={email && <div onClick={() => setEmail('')}><Icon source={CircleCancelMajor} /></div>} />
-                <Stack>
-                    <Stack.Item fill>
-                        <TextField requiredIndicator label="Date of Birth" type='date' name='dob' value={DOB} onChange={setDOB} />
-                    </Stack.Item>
-                    <Stack.Item fill>
-                        <TextField requiredIndicator label="Contact Number" type='tel' name='tel' value={tel} onChange={setTel} suffix={tel && <div onClick={() => setTel('')}><Icon source={CircleCancelMajor} /></div>} />
-                    </Stack.Item>
-                </Stack>
-                <div style={{ 'float': 'right' }}>
-                    <Button submit primary loading={loading} onClick={signIn}>Register</Button>
-                </div>
-                {/* <TextField label="Password" type='password' value={password} onChange={setPassword} suffix={password && <div onClick={() => setPassword('')}><Icon source={CircleCancelMajor} /></div>} /> */}
-            </FormLayout>
-        </div>
+
+            <div style={{ 'position': 'absolute' }}>
+                <Frame>
+                    {showToast && <Toast content={toastMessage} onDismiss={() => setShowToast(false)} />}
+                </Frame>
+            </div>
+        </>
     )
 }

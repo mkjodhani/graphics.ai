@@ -51,13 +51,13 @@ export default function UserHome() {
                         icon: HomeMajor,
                         exactMatch: true,
                         selected: location.pathname.trim() === "/admin/dashboard",
-                        onClick: () => navigate("/admin/dashboard")
+                        onClick: () => navigate("/certified/admin/dashboard")
                     },
                     {
                         label: 'Issues',
                         icon: NoteMajor,
                         selected: location.pathname.trim() === "/admin/issues",
-                        onClick: () => navigate("/admin/issues")
+                        onClick: () => navigate("/certified/admin/issues")
                     }
                 ]}
             />
@@ -106,7 +106,7 @@ export default function UserHome() {
                         icon: HomeMajor,
                         exactMatch: true,
                         selected: location.pathname.trim() === "/organization/dashboard",
-                        onClick: () => navigate("/organization/dashboard")
+                        onClick: () => navigate("/certified/organization/dashboard")
                     },
                     {
                         label: 'Departments',
@@ -165,7 +165,7 @@ export default function UserHome() {
                         icon: HomeMajor,
                         exactMatch: true,
                         selected: location.pathname.trim() === "/authorizer/dashboard",
-                        onClick: () => navigate("/authorizer/dashboard")
+                        onClick: () => navigate("/certified/authorizer/dashboard")
                     },
                     {
                         label: 'Requests',
@@ -219,7 +219,7 @@ export default function UserHome() {
                         icon: HomeMajor,
                         exactMatch: true,
                         selected: location.pathname.trim() === "/user/dashboard",
-                        onClick: () => navigate("/user/dashboard")
+                        onClick: () => navigate("/certified/user/dashboard")
                     },
                     {
                         label: 'Certificates',

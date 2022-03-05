@@ -1,9 +1,9 @@
-import { Button, ButtonGroup, Card, Icon, Collapsible, TextField, Tooltip, Select } from '@shopify/polaris'
+import { Button, ButtonGroup, Card, Icon, Collapsible, TextField, Tooltip, Select, Scrollable } from '@shopify/polaris'
 import React, { useState, useEffect } from 'react'
 import { CircleCancelMajor } from '@shopify/polaris-icons';
 import { SketchPicker } from 'react-color';
-const alignValues =[{ label: "Start", value: 'start' },{ label: "End", value: 'end' },{ label: "Center", value: 'center' },{ label: "Left", value: 'left' },{ label: "Right", value: 'right' }]
-const fontFamilies = [{ label: "Dancing Script", value: 'DancingScript' },{ label: "Black Swan", value: 'BlackSwan'},{ label: "Palatino", value: 'PalatinoLinotype'}]
+const alignValues = [{ label: "Start", value: 'start' }, { label: "End", value: 'end' }, { label: "Center", value: 'center' }, { label: "Left", value: 'left' }, { label: "Right", value: 'right' }]
+const fontFamilies = [{ label: "Dancing Script", value: 'DancingScript' }, { label: "Black Swan", value: 'BlackSwan' }, { label: "Palatino", value: 'PalatinoLinotype' }]
 export default function ConfigElement({ open, label, id, config, setConfig }) {
     const [toggleButton, setToggleButton] = useState(false);
     const [string, setString] = useState(config?.value || label);
@@ -20,7 +20,7 @@ export default function ConfigElement({ open, label, id, config, setConfig }) {
     });
     const [color, setColor] = useState({ hex: config.color || '#333' });
     useEffect(() => {
-        setTimeout(() =>{
+        setTimeout(() => {
             setConfig({
                 value: string,
                 size,
@@ -31,63 +31,64 @@ export default function ConfigElement({ open, label, id, config, setConfig }) {
                 textAlign,
                 fontFamily
             })
-        },500)
-    }, [string, size, x, y, color, buttons,textAlign,fontFamily])
+        }, 500)
+    }, [string, size, x, y, color, buttons, textAlign, fontFamily])
     return (
         <>
             <Button primary={toggleButton} fullWidth onClick={() => setToggleButton(!toggleButton)}>{label}</Button>
-            <Collapsible open={toggleButton} id={id} transition={{ duration: '500ms', timingFunction: 'ease-in-out' }} expandOnPrint>
+            <Collapsible open={toggleButton} id={id} transition={{ duration: '500ms', timingFunction: 'ease-in-out' }}>
                 <br />
                 <Card title={label} sectioned>
-                    <Card.Section>
-
-                        <TextField type={label === "Date of Certification"?'date':'text'} label='String' value={string} onChange={setString} suffix={string && <div onClick={() => setString('')}><Icon source={CircleCancelMajor} /></div>} />
-                        <div>
-                            <Select label='Font Family' options={fontFamilies} value={fontFamily} onChange={setFontFamily} />
-                            <ButtonGroup segmented>
-                                <div style={{ 'paddingRight': '5px','minWidth':'100px' }}>
-                                    <Select label='Alignment' options={alignValues} value={textAlign} onChange={setTextAlign} />
-                                </div>
-                                <div>
-                                    <TextField label='Size' value={size} onChange={setSize} type='number' />
-                                </div>
-                            </ButtonGroup>
+                    <Scrollable style={{'height':'50vh'}}>
+                        <Card.Section>
+                            <TextField type={label === "Date of Certification" ? 'date' : 'text'} label='String' value={string} onChange={setString} suffix={string && <div onClick={() => setString('')}><Icon source={CircleCancelMajor} /></div>} />
+                            <div>
+                                <Select label='Font Family' options={fontFamilies} value={fontFamily} onChange={setFontFamily} />
+                                <ButtonGroup segmented>
+                                    <div style={{ 'paddingRight': '5px', 'minWidth': '100px' }}>
+                                        <Select label='Alignment' options={alignValues} value={textAlign} onChange={setTextAlign} />
+                                    </div>
+                                    <div>
+                                        <TextField label='Size' value={size} onChange={setSize} type='number' />
+                                    </div>
+                                </ButtonGroup>
+                                <ButtonGroup segmented fullWidth>
+                                    <div style={{ 'paddingRight': '5px' }}>
+                                        <TextField label='Position : X' value={x} onChange={setX} type='number' />
+                                    </div>
+                                    <div>
+                                        <TextField label='Position : Y' value={y} onChange={setY} type='number' />
+                                    </div>
+                                </ButtonGroup>
+                            </div>
+                            <br />
                             <ButtonGroup segmented fullWidth>
-                                <div style={{ 'paddingRight': '5px' }}>
-                                    <TextField label='Position : X' value={x} onChange={setX} type='number' />
-                                </div>
-                                <div>
-                                    <TextField label='Position : Y' value={y} onChange={setY} type='number' />
-                                </div>
-                            </ButtonGroup>
-                        </div>
-                        <br />
-                        <ButtonGroup segmented fullWidth>
-                            <Tooltip content="Bold" dismissOnMouseOut>
-                                <Button primary={buttons.bold} onClick={() => setButtons(oldButtons => ({ ...oldButtons, bold: !oldButtons.bold }))}>B</Button>
-                            </Tooltip>
-                            <Tooltip content="Italic" dismissOnMouseOut>
-                                <Button primary={buttons.italic} onClick={() => setButtons(oldButtons => ({ ...oldButtons, italic: !oldButtons.italic }))}>I</Button>
-                            </Tooltip>
-                            {/* <Tooltip content="Underline" dismissOnMouseOut>
+                                <Tooltip content="Bold" dismissOnMouseOut>
+                                    <Button primary={buttons.bold} onClick={() => setButtons(oldButtons => ({ ...oldButtons, bold: !oldButtons.bold }))}>B</Button>
+                                </Tooltip>
+                                <Tooltip content="Italic" dismissOnMouseOut>
+                                    <Button primary={buttons.italic} onClick={() => setButtons(oldButtons => ({ ...oldButtons, italic: !oldButtons.italic }))}>I</Button>
+                                </Tooltip>
+                                {/* <Tooltip content="Underline" dismissOnMouseOut>
                             <Button primary={buttons.underline} onClick={() => setButtons(oldButtons => ({ ...oldButtons, underline: !oldButtons.underline }))}>U</Button>
                         </Tooltip>
                         <Tooltip content="Strikethrough" dismissOnMouseOut>
                             <Button primary={buttons.strike} onClick={() => setButtons(oldButtons => ({ ...oldButtons, strike: !oldButtons.strike }))}>S</Button>
                         </Tooltip> */}
-                        </ButtonGroup>
-                        <br />
-                        <div style={{ 'display': 'flex', alignItems: 'flex-start', 'justifyContent': 'space-between' }}>
-                            <div>
-                                <h1>Color : </h1>
-                                <div style={{ 'width': '30px', 'backgroundColor': color.hex, 'height': '30px', 'margin': '5px' }}></div>
+                            </ButtonGroup>
+                            <br />
+                            <div style={{ 'display': 'flex', alignItems: 'flex-start', 'justifyContent': 'space-between' }}>
+                                <div>
+                                    <h1>Color : </h1>
+                                    <div style={{ 'width': '30px', 'backgroundColor': color.hex, 'height': '30px', 'margin': '5px' }}></div>
+                                </div>
+                                <SketchPicker
+                                    color={color.hex}
+                                    onChangeComplete={setColor}
+                                />
                             </div>
-                            <SketchPicker
-                                color={color.hex}
-                                onChangeComplete={setColor}
-                            />
-                        </div>
-                    </Card.Section>
+                        </Card.Section>
+                    </Scrollable>
                 </Card>
             </Collapsible>
         </>
