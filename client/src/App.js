@@ -12,6 +12,8 @@ import VisulizerNineHalf from "./components/pages/visulizer/VisulizerNineHalf";
 import VisulizerTen from "./components/pages/visulizer/VisulizerTen";
 import VisulizerEleven from "./components/pages/visulizer/VisulizerEleven";
 import Model from "./components/pages/modeling/components/Model";
+import Layout from "./components/pages/modeling/components/Layout";
+import Visulize from "./components/pages/visulizer";
 
 export default function Root() {
   return (
@@ -26,6 +28,7 @@ function App() {
       <Routes>
         <Route  path="/" element={<Index />} />
         <Route path="/editor" element={<Editor />} />
+        <Route path="/visulize" element={<Visulize/>} />
         <Route path="/visulizer" element={<Visulizer />} />
         <Route path="/visulizer/six" element={<VisulizerSix />} />
         <Route path="/visulizer/seven" element={<VisulizerSeven />} />
@@ -35,6 +38,7 @@ function App() {
         <Route path="/visulizer/ten" element={<VisulizerTen />} />
         <Route path="/visulizer/eleven" element={<VisulizerEleven />} />
         <Route path="/modeling" element={<Model />} />
+        <Route path="/modeling/layout" element={<Layout />} />
       </Routes>
   );
 }
