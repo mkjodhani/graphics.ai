@@ -11,7 +11,7 @@ import VisulizerNine from "./components/pages/visulizer/VisulizerNine";
 import VisulizerNineHalf from "./components/pages/visulizer/VisulizerNineHalf";
 import VisulizerTen from "./components/pages/visulizer/VisulizerTen";
 import VisulizerEleven from "./components/pages/visulizer/VisulizerEleven";
-import Modeling from "./components/pages/modeling";
+import Model from "./components/pages/modeling/components/Model";
 
 export default function Root() {
   return (
@@ -34,7 +34,7 @@ function App() {
         <Route path="/visulizer/nine-1" element={<VisulizerNineHalf />} />
         <Route path="/visulizer/ten" element={<VisulizerTen />} />
         <Route path="/visulizer/eleven" element={<VisulizerEleven />} />
-        <Route path="/modeling" element={<Modeling />} />
+        <Route path="/modeling" element={<Model />} />
       </Routes>
   );
 }
