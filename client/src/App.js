@@ -1,11 +1,18 @@
 import { Provider, useSelector } from "react-redux";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Index from "./components/Index";
-import LogIn from "./components/pages/authentication/LogIn";
-import Register from "./components/pages/authentication/SignIn";
-import Certificate from "./components/pages/Certificate";
-import Home from "./components/pages/Home";
 import { store } from "./redux/store";
+import Editor from "./components/pages/Editor";
+import Visulizer from "./components/pages/visulizer/Visulizer";
+import VisulizerSix from "./components/pages/visulizer/VisulizerSix";
+import VisulizerSeven from "./components/pages/visulizer/VisulizerSeven";
+import VisulizerEight from "./components/pages/visulizer/VisulizerEight";
+import VisulizerNine from "./components/pages/visulizer/VisulizerNine";
+import VisulizerNineHalf from "./components/pages/visulizer/VisulizerNineHalf";
+import VisulizerTen from "./components/pages/visulizer/VisulizerTen";
+import VisulizerEleven from "./components/pages/visulizer/VisulizerEleven";
+import Modeling from "./components/pages/modeling";
+
 export default function Root() {
   return (
     <Provider store={store}>
@@ -18,10 +25,16 @@ function App() {
   return (
       <Routes>
         <Route  path="/" element={<Index />} />
-        <Route path="/certified/*" element={<Home/>} />
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/certificate" element={<Certificate />} />
+        <Route path="/editor" element={<Editor />} />
+        <Route path="/visulizer" element={<Visulizer />} />
+        <Route path="/visulizer/six" element={<VisulizerSix />} />
+        <Route path="/visulizer/seven" element={<VisulizerSeven />} />
+        <Route path="/visulizer/eight" element={<VisulizerEight />} />
+        <Route path="/visulizer/nine" element={<VisulizerNine />} />
+        <Route path="/visulizer/nine-1" element={<VisulizerNineHalf />} />
+        <Route path="/visulizer/ten" element={<VisulizerTen />} />
+        <Route path="/visulizer/eleven" element={<VisulizerEleven />} />
+        <Route path="/modeling" element={<Modeling />} />
       </Routes>
   );
 }

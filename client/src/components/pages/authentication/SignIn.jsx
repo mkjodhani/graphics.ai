@@ -63,7 +63,7 @@ export default function SignIn() {
             <div style={{ 'display': 'flex', justifyContent: 'space-around', alignItems: 'center', width: '80vw', height: '100vh', margin: 'auto' }}>
                 <div>
                     <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} />
+                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} /> */}
                     </div>
                     <br />
                     <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>Certificate Varifier</p>

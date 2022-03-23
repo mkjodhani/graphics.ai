@@ -39,7 +39,7 @@ export default function ConfigElement({ open, label, id, config, setConfig }) {
             <Collapsible open={toggleButton} id={id} transition={{ duration: '500ms', timingFunction: 'ease-in-out' }}>
                 <br />
                 <Card title={label} sectioned>
-                    <Scrollable style={{'height':'50vh'}}>
+                    <Scrollable hidden shadow style={{ height: '50vh' }} focusable horizontal={false}>
                         <Card.Section>
                             <TextField type={label === "Date of Certification" ? 'date' : 'text'} label='String' value={string} onChange={setString} suffix={string && <div onClick={() => setString('')}><Icon source={CircleCancelMajor} /></div>} />
                             <div>
@@ -69,12 +69,6 @@ export default function ConfigElement({ open, label, id, config, setConfig }) {
                                 <Tooltip content="Italic" dismissOnMouseOut>
                                     <Button primary={buttons.italic} onClick={() => setButtons(oldButtons => ({ ...oldButtons, italic: !oldButtons.italic }))}>I</Button>
                                 </Tooltip>
-                                {/* <Tooltip content="Underline" dismissOnMouseOut>
-                            <Button primary={buttons.underline} onClick={() => setButtons(oldButtons => ({ ...oldButtons, underline: !oldButtons.underline }))}>U</Button>
-                        </Tooltip>
-                        <Tooltip content="Strikethrough" dismissOnMouseOut>
-                            <Button primary={buttons.strike} onClick={() => setButtons(oldButtons => ({ ...oldButtons, strike: !oldButtons.strike }))}>S</Button>
-                        </Tooltip> */}
                             </ButtonGroup>
                             <br />
                             <div style={{ 'display': 'flex', alignItems: 'flex-start', 'justifyContent': 'space-between' }}>

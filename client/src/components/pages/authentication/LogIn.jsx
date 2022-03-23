@@ -65,7 +65,7 @@ export default function LogIn() {
             <header style={{ 'top': 0, 'height': '70px', 'position': 'fixed',  'width': '100%', 'zIndex': 50 }}>
                 <div style={{ 'width': '100%', 'display': 'flex', 'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center' }}>
                     <div style={{ 'padding': '5px', 'display': 'flex', 'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center' }}>
-                        <img src={require('../../../assets/img/icon.png')} style={{ 'height': '60px' }} />
+                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': '60px' }} /> */}
                         <h1 style={{ 'fontFamily': 'BlackSwan', 'fontSize': '2em' }}>{SITE_NAME}</h1>
                     </div>
                     <div style={{ 'padding': '5px' }}>
@@ -78,7 +78,7 @@ export default function LogIn() {
 
                 <Form onSubmit={login}>
                     <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} />
+                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} /> */}
                     </div>
                     <br />
                     <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap' }}>Certificate Varifier</p>
