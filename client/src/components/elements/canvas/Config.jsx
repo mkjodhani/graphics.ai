@@ -42,7 +42,7 @@ export default function Config({ config, setConfig }) {
     return (
         <Suspense fallback={<Skeleton />}>
             <Card title="Setting" sectioned actions={[{ content: showSetting ? "Hide" : 'Show', onAction: () => setShowSetting(settingToggle => !settingToggle) }]}>
-                <Scrollable shadow style={{ height: '90vh' }} focusable horizontal={false}>
+                <Scrollable hidden shadow style={{ height: '90vh' }} focusable horizontal={false}>
                     <div style={{ 'color': 'black', opacity: '0.5', marginBottom: '5px' }}>
                         <b>Note:</b> <>Click on the certificate to download it.</>
                     </div>
