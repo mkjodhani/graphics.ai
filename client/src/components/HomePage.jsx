@@ -93,7 +93,7 @@ export default function HomePage() {
             </div>
 
 
-            <div style={{ 'width': '30%', padding: '10px' }} onClick={() => navigate("/visulizer")}>
+            <div style={{ 'width': '30%', padding: '10px' }} onClick={() => navigate("/visulizer/index.htm")}>
                 <MediaCard
                     title="Music Visulizer"
                     portrait={true}
