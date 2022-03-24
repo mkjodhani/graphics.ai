@@ -1,4 +1,4 @@
-export const SITE_NAME = "graphicAI"
+export const SITE_NAME = "graphic AI"
 export const USER_TYPE = {
   ADMIN: 'admin',
   ORGANIZATION: 'organization',

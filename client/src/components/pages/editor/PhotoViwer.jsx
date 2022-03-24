@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { drawImage, drawText } from '../../scripts/canvasActions';
-import { EDIT_IMAGE, EDIT_TEXT } from '../../scripts/constants';
+import { drawImage, drawText } from '../../../scripts/canvasActions';
+import { EDIT_IMAGE, EDIT_TEXT } from '../../../scripts/constants';
 const renderCanvas = ({ config, context }) => {
   for (let idx in config) {
     switch (config[idx].type) {
@@ -14,13 +14,14 @@ const renderCanvas = ({ config, context }) => {
         break;
     }
   }
-  requestAnimationFrame(renderCanvas)
+  requestAnimationFrame(renderCanvas);
 }
 export default function PhotoViwer({ image, config, size }) {
   const canvasRef = useRef(null);
-  const [loading, setLoading] = useState(true);
   const drawCanvas = ({ image, config }) => {
     const canvas = canvasRef.current;
+    if(!canvas)
+      return
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
     if (image) {
@@ -38,17 +39,12 @@ export default function PhotoViwer({ image, config, size }) {
   useEffect(() => {
     drawCanvas({ image, config })
   }, [image, config])
-  useEffect(() => {
-    setLoading(false);
-  }, [])
   const onDownload = () => {
-    setLoading(true);
     var link = document.createElement('a');
     link.setAttribute('download', 'Certificate.png');
     link.setAttribute('href', canvasRef.current.toDataURL("image/png").replace("image/png", "image/octet-stream"));
     setTimeout(() => {
       link.click();
-      setLoading(false);
     }, 1000)
   }
   return (

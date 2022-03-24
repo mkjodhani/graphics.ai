@@ -1,7 +1,7 @@
 import React from 'react'
-import { EDIT_TEXT } from '../../scripts/constants'
-import ImageConfigElement from '../elements/canvas/ImageConfigElement'
-import TextConfigElement from '../elements/canvas/TextConfigElement'
+import { EDIT_TEXT } from '../../../scripts/constants'
+import ImageConfigElement from './ImageConfigElement'
+import TextConfigElement from './TextConfigElement'
 
 export default function EditorConfigElement({  updateElement,item }) {
   if (item.type === EDIT_TEXT)

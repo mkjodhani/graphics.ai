@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Form, FormLayout, Frame, Icon, Page, Select, Stack, TextField, Toast } from '@shopify/polaris'
 import { CircleCancelMajor } from '@shopify/polaris-icons';
 import axios from 'axios';
-import { USER_TYPE } from '../../../scripts/constants';
+import { SITE_NAME, USER_TYPE, WEB_LOGO_PUBLIC_URL } from '../../../scripts/constants';
 import { Link } from 'react-router-dom';
 export default function SignIn() {
     const [displayName, setDisplayName] = useState('');
@@ -63,10 +63,10 @@ export default function SignIn() {
             <div style={{ 'display': 'flex', justifyContent: 'space-around', alignItems: 'center', width: '80vw', height: '100vh', margin: 'auto' }}>
                 <div>
                     <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} /> */}
+                        <img src={WEB_LOGO_PUBLIC_URL} style={{ 'height': 150 }} />
                     </div>
                     <br />
-                    <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>Certificate Varifier</p>
+                    <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap', 'lineHeight': '1.2em' }}>{SITE_NAME}</p>
                 </div>
                 <FormLayout>
                     {/* <TextField requiredIndicator label="User Type" value={name} onChange={setDisplayName} suffix={name && <div onClick={() => setDisplayName('')}><Icon source={CircleCancelMajor} /></div>} /> */}

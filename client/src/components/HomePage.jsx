@@ -2,11 +2,11 @@ import { Card, MediaCard } from '@shopify/polaris';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import SimpleImageSlider from 'react-simple-image-slider';
-import { SITE_NAME } from '../scripts/constants';
+// import SimpleImageSlider from 'react-simple-image-slider';
+// import { SITE_NAME } from '../scripts/constants';
 import PageHeader from './elements/supplementary/PageHeader';
 
-export default function Index() {
+export default function HomePage() {
     const userInfo = useSelector(state => state.user)
     const navigate = useNavigate();
     const onClickLogInButton = () => {
@@ -129,7 +129,7 @@ export default function Index() {
                     />
                 </MediaCard>
             </div>
-            <div style={{ 'width': '30%', padding: '10px' }} onClick={() => navigate("/converter")}>
+            <div style={{ 'width': '30%', padding: '10px' }} onClick={() => navigate("/Home")}>
                 <MediaCard
                     title="Image Converter"
                     portrait={true}
