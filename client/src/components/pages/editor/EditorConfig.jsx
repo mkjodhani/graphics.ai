@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Card, Icon, Label, Modal, Scrollable, Select, TextField } from '@shopify/polaris'
 import { CircleCancelMajor } from '@shopify/polaris-icons';
 import EditorConfigElement from './EditorConfigElement.jsx'
-import { EDIT_TEXT } from '../../scripts/constants.js';
+import { EDIT_TEXT } from '../../../scripts/constants.js';
 const types = [{ value: 'image', label: 'Image' }, { value: 'text', label: "Text" }];
 function DummyConfig({ config, setConfig, setIsNewVisible ,size}) {
   const [id, setId] = useState('');

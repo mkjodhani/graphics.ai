@@ -4,17 +4,14 @@ import { useRef } from 'react';
 import { useEffect } from 'react';
 import PhotoViwer from './PhotoViwer';
 import EditorConfig from './EditorConfig';
-import CanvasOrder from '../elements/supplementary/CanvasOrder';
-import PageHeader from '../elements/supplementary/PageHeader'
+import CanvasOrder from '../../elements/supplementary/CanvasOrder';
+import PageHeader from '../../elements/supplementary/PageHeader'
 export default function Editor() {
     const [image, setImage] = useState(null);
     const [config, setConfig] = useState([]);
     const [showReorder, setShowReorder] = useState(false);
     const [size, setSize] = useState({ width: 2200, height: 1700 });
     const fileRef = useRef();
-    const renederLimit = () => {
-        requestAnimationFrame(renederLimit);
-    }
     const onFileChange = (event) => {
         const file = event.target.files[0];
         var reader = new FileReader();
@@ -37,12 +34,6 @@ export default function Editor() {
         setConfig([]);
         setImage(null);
     }
-    useEffect(() => {
-        console.log(config);
-    }, [config])
-    useEffect(() => {
-        renederLimit();
-    }, [])
     return (
         <>
             <PageHeader/>
