@@ -1,7 +1,3 @@
-#generated images
-public/images/background
-public/images/files
-public/images/converted
 #pre-trained model
 pointrend_resnet50.pkl
 # Byte-compiled / optimized / DLL files
