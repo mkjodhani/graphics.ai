@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react'
 import {  renderThreeJS } from '../scripts/index'
-
-
 export default function Model() {
-    useEffect(() =>{
+    useEffect(() => {
         renderThreeJS();
-    },[])
+    }, [])
     return (
         <>
     <div id="editor">
