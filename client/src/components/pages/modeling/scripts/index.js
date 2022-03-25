@@ -1,78 +1,60 @@
-import * as THREE from 'three'
-import { TransformControls } from "three/examples/jsm/controls/TransformControls"
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import '../css/style.css';
+import Editor from './editor/Editor';
+import * as THREE from 'three';
+import InteractiveMesh from './editor/viewport/InteractiveMesh';
 
-export const renderThreeJS = () => {
-        const viewport = document.getElementById('webgl');
-        viewport.style.width = window.width;
-        viewport.style.height = window.height;
+export let renderThreeJS = ()=>{
 
-        //creating scene
-        const scene = new THREE.Scene();
+    const viewportCanvas = document.getElementById('webgl');
+    const sidePane = document.getElementById('sidepane');
 
-        //creating camera
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(3, 3, 6);
+    const mouse = {
+        pointer: new THREE.Vector2(),
+        clicked:false
+    };
+    let onMouseClick = (event)=>{
+        mouse.clicked = true;
+        mouse.pointer.x = ( event.clientX / editor.viewport.width ) * 2 - 1;
+        mouse.pointer.y = - ( event.clientY / editor.viewport.height ) * 2 + 1;
+    };
+    window.addEventListener('click', onMouseClick);
+    window.addEventListener('touchstart', (event)=>{
+        onMouseClick(event);
+        event.preventDefault();
+    });
 
-        //creating renderer
-        const renderer = new THREE.WebGLRenderer({ canvas: viewport });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x3a3a3a);
+    //create editor
+    const editor = new Editor(mouse, viewportCanvas, sidePane);
 
-        const orbitControls = new OrbitControls(camera, renderer.domElement);
+    //creating cube
+    const geometry = new THREE.BoxBufferGeometry();
+    const material = new THREE.MeshBasicMaterial({color:0x8e9091});
+    const cube = new InteractiveMesh(editor.viewport, geometry, material, editor.propertiesPane);
+    editor.viewport.add(cube);
 
-        //creating helpers
-        const helperGroup = new THREE.Group();
-        //add grid
-        const grid = new THREE.GridHelper(50, 100, 0x4a4a4a, 0x4a4a4a);
-        // grid.material.opacity = 0.4;
-        helperGroup.add(grid);
-        //add axes
-        const axesGroup = new THREE.Group();
-        const positiveAxes = new THREE.AxesHelper(100);
-        axesGroup.add(positiveAxes);
-        const negativeAxes = new THREE.AxesHelper(-100);
-        axesGroup.add(negativeAxes);
-        helperGroup.add(axesGroup);
-        scene.add(helperGroup);
+    const cameraProperties = {perspective:true};
+    editor.propertiesPane.add(cameraProperties, 'perspective').onChange(()=>{
+        editor.viewport.switchCamera();
+    });
 
-        //creating cube
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x8e9091 });
-        const cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-        camera.lookAt(cube.position);
-        const transformControls = new TransformControls(camera, renderer.domElement);
-        transformControls.attach(cube);
-        transformControls.addEventListener('mouseDown', (event) => {
-            orbitControls.enabled = false;
-        });
-        transformControls.addEventListener('mouseUp', (event) => {
-            orbitControls.enabled = true;
-        });
-        window.addEventListener('keypress', (event) => {
-            switch (event.code) {
-                case 'KeyG':
-                    transformControls.setMode('translate');
-                    break;
-                case 'KeyR':
-                    transformControls.setMode('rotate');
-                    break;
-                case 'KeyS':
-                    transformControls.setMode('scale');
-                    break;
-            }
-        });
-        scene.add(transformControls);
+    const pcameraFolder = editor.propertiesPane.addFolder('Camera(Perspective)');
+    pcameraFolder.add(editor.viewport.controlledCamera.perspectiveCamera.position, 'x').min(-10).max(10).listen();
+    pcameraFolder.add(editor.viewport.controlledCamera.perspectiveCamera.position, 'y').min(-10).max(10).listen();
+    pcameraFolder.add(editor.viewport.controlledCamera.perspectiveCamera.position, 'z').min(-10).max(10).listen();
+    pcameraFolder.add(editor.viewport.controlledCamera.perspectiveCamera, 'fov').min(-180).max(180).listen();
+    pcameraFolder.open();
+
+    const ocameraFolder = editor.propertiesPane.addFolder('Camera(Orthograhpic)');
+    ocameraFolder.add(editor.viewport.controlledCamera.orthographicCamera.position, 'x').min(-10).max(10).listen();
+    ocameraFolder.add(editor.viewport.controlledCamera.orthographicCamera.position, 'y').min(-10).max(10).listen();
+    ocameraFolder.add(editor.viewport.controlledCamera.orthographicCamera.position, 'z').min(-10).max(10).listen();
+    ocameraFolder.add(editor.viewport.controlledCamera.orthographicCamera, 'zoom').min(-10).max(10).listen();
+    ocameraFolder.open();
+
+    // editor.viewport.hideHelpers();
+
+    //rendering the editor.viewport
+    editor.viewport.render();
 
 
-        // helperGroup.visible = false;
-
-        function animate() {
-            renderer.render(scene, camera);
-            requestAnimationFrame(animate);
-        }
-
-        //rendering the scene
-        animate();
-}
+};
