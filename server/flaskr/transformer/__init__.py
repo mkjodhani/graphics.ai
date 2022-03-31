@@ -4,9 +4,10 @@ import cv2
 import numpy
 from pixellib.torchbackend.instance import instanceSegmentation
 class TransformImage(object):
-    def __init__(self, fileName, backgroundName) -> None:
+    def __init__(self, fileName, backgroundName, type) -> None:
         self.filename = "server/public/images/files/" + fileName
         self.bg_filename = "server/public/images/background/" + backgroundName
+        self.type = type
         pass
 
     def create_mask(self, detected_objects):
@@ -27,12 +28,6 @@ class TransformImage(object):
                 if mask[y, x] == 255:
                     whole_mask[y, x] = [255, 255, 255]
         return whole_mask
-
-    def gaussian_blur(self, img, blur_factor):
-        return cv2.GaussianBlur(img, (blur_factor, blur_factor), 0)
-
-    def save_image(self, path, image):
-        cv2.imwrite(path, image)
 
     def bg_style_transfer(self, bg_file, img_frame, img):
         new_bg = cv2.imread(bg_file)
@@ -61,31 +56,27 @@ class TransformImage(object):
     def tranform(self):
         fname, extension = os.path.basename(self.filename).split('.')
         output_fname = "/public/images/converted/" + fname + " preview."+extension
-        print(1)
         ins = instanceSegmentation()
         ins.load_model("server/flaskr/transformer/pointrend_resnet50.pkl")
         self.segmap = ins.segmentImage(self.filename, extract_segmented_objects=True,
                                   output_image_name=output_fname)
-        print(2)
 
         # cv2.imwrite("public/images/coverted/extracted."+extension, segmap[1])
 
         # TODO improve mask accuracy
         self.mask = self.create_mask(self.segmap[0]['masks'])
         # cv2.imwrite("server/public/images/converted/" + fname + " masked_img."+extension, self.mask)
-        print(3)
 
-        # '''creating bokeh image'''
         self.img = cv2.imread(self.filename)
-        blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
-        # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
-        print(4)
 
-        output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-        cv2.imwrite(fname + "bg_blurred."+extension, output)
+        if self.type == "Blur":
+            # '''creating bokeh image'''
+            blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
+            # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
 
-        print(5)
-        '''creating style transfer'''
-        output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
-        cv2.imwrite(fname + "style_transfer."+extension, output)
-        print(6)
+            output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
+            cv2.imwrite(fname + "bg_blurred."+extension, output)
+        else:
+            '''creating style transfer'''
+            output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
+            cv2.imwrite(fname + "style_transfer."+extension, output)
