@@ -4,7 +4,8 @@ import cv2
 import numpy
 from pixellib.torchbackend.instance import instanceSegmentation
 class TransformImage(object):
-    def __init__(self, fileName, backgroundName) -> None:
+    def __init__(self, fileName, backgroundName,type) -> None:
+        self.type = type;
         self.filename = "public/images/files/" + fileName
         self.bg_filename = "public/images/background/" + backgroundName
         pass
@@ -60,32 +61,28 @@ class TransformImage(object):
 
     def tranform(self):
         fname, extension = os.path.basename(self.filename).split('.')
-        output_fname = "/public/images/converted/" + fname + " preview."+extension
-        print(1)
+        output_fname = "public/images/converted/" + fname + "_1."+extension
+
         ins = instanceSegmentation()
         ins.load_model("pointrend_resnet50.pkl")
         self.segmap = ins.segmentImage(self.filename, extract_segmented_objects=True,
                                   output_image_name=output_fname)
-        print(2)
 
         # cv2.imwrite("public/images/coverted/extracted."+extension, segmap[1])
 
         # TODO improve mask accuracy
         self.mask = self.create_mask(self.segmap[0]['masks'])
         # cv2.imwrite("server/public/images/converted/" + fname + " masked_img."+extension, self.mask)
-        print(3)
 
         # '''creating bokeh image'''
         self.img = cv2.imread(self.filename)
         blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
         # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
-        print(4)
-
-        output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-        cv2.imwrite(fname + "bg_blurred."+extension, output)
-
-        print(5)
+        if self.type == "blur":
+            output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
+            cv2.imwrite("public/images/converted/"+ fname + "_2."+extension, output)
+        
         '''creating style transfer'''
-        output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
-        cv2.imwrite(fname + "style_transfer."+extension, output)
-        print(6)
+        if self.type == "changeBackground":
+            output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
+            cv2.imwrite("public/images/converted/" + fname + "_3."+extension, output)
