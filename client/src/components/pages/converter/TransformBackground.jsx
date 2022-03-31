@@ -2,9 +2,10 @@ import PageHeader from '../../elements/supplementary/PageHeader'
 import React, { useCallback, useEffect, useState } from 'react';
 import { Caption, DropZone, Stack, Thumbnail, Button, Heading } from '@shopify/polaris';
 import { NoteMinor } from '@shopify/polaris-icons';
+const rootURL = "http://localhost:5000/public/images/converted/";    
 
 export default function TransformBackground() {
-    const [fetchInterval, setFetchInterval] = useState();
+    const [loading,setLoading] = useState(false);
     const [mainFile, setMainFile] = useState();
     const [backgroundFile, setBackgroundFile] = useState();
     const [mainFileSource, setMainFileource] = useState();
@@ -13,7 +14,6 @@ export default function TransformBackground() {
     const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
     const fileUploadImage = !mainFile && <DropZone.FileUpload />;
     const fileUploadBackground = !backgroundFile && <DropZone.FileUpload />;
-    const rootURL = "http://localhost:5000/public/images/converted/"
     const checkForFileExist = () => {
         setInterval(() => {
             fetch("")
@@ -81,10 +81,10 @@ export default function TransformBackground() {
     }
     function download() {
         window.open(rootURL + reposnseFile)
-        var a = document.createElement("a");
-        a.href = rootURL + reposnseFile;
-        a.setAttribute("download", reposnseFile);
-        a.click();
+        // var a = document.createElement("a");
+        // a.href = rootURL + reposnseFile;
+        // a.setAttribute("download", reposnseFile);
+        // a.click();
     }
     useEffect(() => {
         readURLImage(mainFile);
@@ -93,6 +93,7 @@ export default function TransformBackground() {
         readURLBackground(backgroundFile);
     }, [backgroundFile])
     const sendFileToTransform = async () => {
+        setLoading(true);
         if (!mainFile || !backgroundFile) {
             alert("Select two images...");
             return
@@ -105,18 +106,9 @@ export default function TransformBackground() {
             body: formData
         }).then(data => data.json())
             .then(({ fileName, status, message }) => {
-                console.log( rootURL+ fileName);
-                setResponseFile( fileName)
-                // const interval =  setInterval(async () => {
-                //     fetch("http://localhost:5000/public/images/converted/" + fileName).then(data => {
-                //         setResponseFile(data);
-                //         console.log(data);
-                //         clearInterval(fetchInterval)
-                //     })
-                // }, 500);
-                // setFetchInterval(interval);
+                setResponseFile( fileName);
+                setLoading(false);
             })
-        // axios.post('/uploader',formData).then(res => console.log(res))
     }
     return (
         <div>
@@ -155,7 +147,7 @@ export default function TransformBackground() {
             </div>
             <div style={{ 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'margin': '20px' }}>
                 <div style={{ 'margin': '5px' }}>
-                    <Button size='large' primary onClick={sendFileToTransform}>Convert</Button>
+                    <Button loading={loading} size='large' primary onClick={sendFileToTransform}>Convert</Button>
                 </div>
                 <div style={{ 'margin': '5px' }}>
                     <Button disabled={!reposnseFile} size='large' primary onClick={download}>Download</Button>

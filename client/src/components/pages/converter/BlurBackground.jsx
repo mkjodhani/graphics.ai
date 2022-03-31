@@ -3,9 +3,11 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Caption, DropZone, Stack, Thumbnail, Button, Heading } from '@shopify/polaris';
 import { NoteMinor } from '@shopify/polaris-icons';
 import axios from 'axios';
+const rootURL = "http://localhost:5000/public/images/converted/";
 
 export default function BlurBackground() {
     const [file, setFile] = useState();
+    const [loading,setLoading] = useState(false);
     const [fileSource, setFileSource] = useState();
     const [reposnseFile, setResponseFile] = useState(null);
     const handleDropZoneDrop = useCallback(
@@ -20,20 +22,34 @@ export default function BlurBackground() {
 
         reader.onload = function (e) {
             setFileSource(e.target.result);
-            console.log(e.target.result);
         };
     }
     useEffect(() => {
         readURL(file);
     }, [file])
-    const sendFileToConvert = () => {
+    const sendFileToConvert = async () => {
+        setLoading(true);
         if (!file) {
-            alert("Select One Image to blur...");
+            alert("Select one Image...");
             return
         }
         const formData = new FormData();
-        formData.append('image',file);
-        axios.post('/uploader',formData)
+        formData.append('image', file);
+        await fetch('http://localhost:5000/uploader/blur', {
+            method: "POST",
+            body: formData
+        }).then(data => data.json())
+            .then(({ fileName, status, message }) => {
+                setResponseFile(fileName);
+                setLoading(false);
+            })
+    }
+    function download() {
+        window.open(rootURL + reposnseFile)
+        // var a = document.createElement("a");
+        // a.href = rootURL + reposnseFile;
+        // a.setAttribute("download", reposnseFile);
+        // a.click();
     }
     const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
     const fileUpload = !file && <DropZone.FileUpload />;
@@ -71,7 +87,14 @@ export default function BlurBackground() {
                             </div>
                         }
                     </div>
-                    <Button primary fullWidth onClick={sendFileToConvert}>Convert</Button>
+                    <div style={{ 'display': 'flex', 'alignItems': 'center', 'justifyContent': 'center', 'margin': '20px' }}>
+                        <div style={{ 'margin': '5px' }}>
+                            <Button loading={loading} size='large' primary onClick={sendFileToConvert}>Convert</Button>
+                        </div>
+                        <div style={{ 'margin': '5px' }}>
+                            <Button disabled={!reposnseFile} size='large' primary onClick={download}>Download</Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
