@@ -5,7 +5,7 @@ from time import time
 global file_index
 global background_index
 app = Flask(__name__)
-app.debug = True
+# app.debug = True
 
 
 @app.route('/user/<name>')

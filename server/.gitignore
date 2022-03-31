@@ -1,5 +1,8 @@
 #pre-trained model
 pointrend_resnet50.pkl
+/public/images/background/*
+/public/images/converted/*
+/public/images/files/*
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
