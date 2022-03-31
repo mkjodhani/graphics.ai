@@ -9,10 +9,13 @@ npm install
 npm start
 ``````
 
-start the back-end using following commands:
+## Download pre-trained model
+[PointRend](https://github.com/ayoolaolafenwa/PixelLib/releases/download/0.2.0/pointrend_resnet50.pkl) from here.
 
-``````bash
-cd server
-npm install
-npm start
-``````
+Place it in root folder
+
+## Install requirements
+```sh
+pip install -r requirements.txt
+python3 server.py
+```

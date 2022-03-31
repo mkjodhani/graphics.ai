@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Form, FormLayout, Frame, Heading, Page, TextField, Toast } from '@shopify/polaris'
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { SITE_NAME } from '../../../scripts/constants';
+import { SITE_NAME, WEB_LOGO_PUBLIC_URL } from '../../../scripts/constants';
 import { useSelector } from 'react-redux';
 
 export default function LogIn() {
@@ -62,10 +62,10 @@ export default function LogIn() {
     }
     return (
         <>
-            <header style={{ 'top': 0, 'height': '70px', 'position': 'fixed',  'width': '100%', 'zIndex': 50 }}>
+            <header style={{ 'top': 0, 'height': '70px', 'position': 'fixed', 'width': '100%', 'zIndex': 50 }}>
                 <div style={{ 'width': '100%', 'display': 'flex', 'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center' }}>
                     <div style={{ 'padding': '5px', 'display': 'flex', 'display': 'flex', 'justifyContent': 'space-between', 'alignItems': 'center' }}>
-                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': '60px' }} /> */}
+                        <img src={WEB_LOGO_PUBLIC_URL} style={{ 'height': '60px' }} />
                         <h1 style={{ 'fontFamily': 'BlackSwan', 'fontSize': '2em' }}>{SITE_NAME}</h1>
                     </div>
                     <div style={{ 'padding': '5px' }}>
@@ -74,24 +74,31 @@ export default function LogIn() {
                     </div>
                 </div>
             </header>
-            <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', width: '100vw', height: '100vh', flexDirection: 'column' }}>
-
-                <Form onSubmit={login}>
-                    <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        {/* <img src={require('../../../assets/img/icon.png')} style={{ 'height': 150 }} /> */}
+            <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center', width: '100vw', height: '100vh', flexDirection: 'row' }}>
+                <div>
+                    <div style={{ 'display': 'flex', justifyContent: 'center', alignItems: 'center', 'flexDirection': 'column' }}>
+                        <img src={WEB_LOGO_PUBLIC_URL} style={{ 'height': 150 }} />
                     </div>
                     <br />
-                    <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap' }}>Certificate Varifier</p>
-                    <br />
-                    <FormLayout>
-                        <TextField label="Username" value={username} onChange={setUsername} />
-                        <TextField label="Password" type='password' value={password} onChange={setPassword} />
-                        <div style={{ 'float': 'right' }}>
-                            <Button primary submit>Log In</Button>
-                        </div>
-                    </FormLayout>
-                </Form>
-                <p>Not registered yet? <Link to={"/register"} >Create an Account</Link></p>
+                </div>
+                <div>
+                    <Form onSubmit={login}>
+                        <p style={{ 'textAlign': 'center', fontFamily: 'BlackSwan', fontSize: '2.5em', 'flex': 1, 'flexWrap': 'wrap' }}>{SITE_NAME}</p>
+                        <br />
+                        <FormLayout>
+                            <TextField label="Username" value={username} onChange={setUsername} />
+                            <TextField label="Password" type='password' value={password} onChange={setPassword} />
+                            <div style={{ 'float': 'right' }}>
+                                <Button primary submit>Log In</Button>
+                            </div>
+                        </FormLayout>
+                    </Form>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <br/>
+                    <p>Not registered yet? <Link to={"/register"} >Create an Account</Link></p>
+                </div>
             </div>
             <div style={{ 'position': 'absolute' }}>
                 <Frame>
