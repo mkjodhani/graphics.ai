@@ -75,8 +75,8 @@ class TransformImage(object):
             # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
 
             output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-            cv2.imwrite(fname + "bg_blurred."+extension, output)
+            cv2.imwrite("server/temporary/"+fname + "bg_blurred."+extension, output)
         else:
             '''creating style transfer'''
             output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
-            cv2.imwrite(fname + "style_transfer."+extension, output)
+            cv2.imwrite("server/temporary/"+fname + "style_transfer."+extension, output)
