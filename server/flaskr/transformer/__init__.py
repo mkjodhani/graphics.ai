@@ -78,14 +78,10 @@ class TransformImage(object):
         self.img = cv2.imread(self.filename)
         blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
         # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
-        if self.type == "blur":
-            output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-            cv2.imwrite("public/images/converted/"+ fname + "_2."+extension, output)
         
         '''creating style transfer'''
-        if self.type == "changeBackground":
-            output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
-            cv2.imwrite("public/images/converted/" + fname + "_3."+extension, output)
+        output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
+        cv2.imwrite("public/images/converted/" + fname + "_3."+extension, output)
 
 class BlurImage(object):
     def __init__(self, fileName) -> None:
