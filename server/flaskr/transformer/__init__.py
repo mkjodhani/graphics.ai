@@ -1,3 +1,4 @@
+import os
 import cv2
 # from cv2 import CV_64F
 import numpy
@@ -33,59 +34,58 @@ class TransformImage(object):
     def save_image(self, path, image):
         cv2.imwrite(path, image)
 
-    def bg_style_transfer(self, bg_file, img_frame):
-        # img = cv2.imread(img_file)
-        # img_frame = numpy.shape(img)
+    def bg_style_transfer(self, bg_file, img_frame, img):
+        new_bg = cv2.imread(bg_file)
+        bg_frame = numpy.shape(new_bg)
+        
+        # img_aspect_ratio = img_frame[1]/img_frame[0]
+        # bg_aspect_ratio = bg_frame[1]/bg_frame[0]
 
-        new_style = cv2.imread(bg_file)
-        bg_frame = numpy.shape(new_style)
+        width_ratio = img_frame[1] / bg_frame[1]
+        height_ratio = img_frame[0] / bg_frame[0]
 
-        if (bg_frame[0] > img_frame[0] and bg_frame[1] < img_frame[1]):
-            bg_aspect_ratio = bg_frame[1]/bg_frame[0]
-            new_style = cv2.resize(
-                new_style, (int(img_frame[0]/bg_aspect_ratio), img_frame[1]))
+        max_ratio = max(width_ratio, height_ratio)
 
-        if (bg_frame[0] < img_frame[0] and bg_frame[1] > img_frame[1]):
-            bg_aspect_ratio = bg_frame[1]/bg_frame[0]
-            new_style = cv2.resize(
-                new_style, (img_frame[0], int(img_frame[1]/bg_aspect_ratio)))
+        new_bg = cv2.resize(new_bg, (int(bg_frame[1] * max_ratio), int(bg_frame[0] * max_ratio)))
 
-        bg = numpy.shape(new_style)
+        # cv2.imwrite("server/public/images/converted/bgresized.jpg", new_bg)
+        bg = numpy.shape(new_bg)
         shift_x = abs(bg[1] - img_frame[1]) // 2
         shift_y = abs(bg[0] - img_frame[0]) // 2
-        print(shift_x, shift_y)
-        new_style = new_style[shift_y: shift_y +
-                              img_frame[0], shift_x: shift_x + img_frame[1]]
 
-        output = numpy.where(self.mask != [255, 255, 255], new_style, self.img)
+        new_bg = new_bg[shift_y: shift_y +
+                              img_frame[0], shift_x: shift_x + img_frame[1]]
+        output = numpy.where(self.mask != [255, 255, 255], new_bg, img)
         return output
 
     def tranform(self):
-        fname, extension = self.filename.split('.')
-        output_fname = fname+" preview."+extension
-
+        fname, extension = os.path.basename(self.filename).split('.')
+        output_fname = "/public/images/converted/" + fname + " preview."+extension
+        print(1)
         ins = instanceSegmentation()
         ins.load_model("pointrend_resnet50.pkl")
         self.segmap = ins.segmentImage(self.filename, extract_segmented_objects=True,
-                                  output_image_name="public/images/coverted/"+output_fname)
+                                  output_image_name=output_fname)
+        print(2)
 
         # cv2.imwrite("public/images/coverted/extracted."+extension, segmap[1])
 
+        # TODO improve mask accuracy
         self.mask = self.create_mask(self.segmap[0]['masks'])
-        cv2.imwrite(
-            "public/images/coverted/masked_img."+extension, self.mask)
+        # cv2.imwrite("server/public/images/converted/" + fname + " masked_img."+extension, self.mask)
+        print(3)
 
-        '''creating bokeh image'''
+        # '''creating bokeh image'''
         self.img = cv2.imread(self.filename)
         blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
-        cv2.imwrite(
-            "public/images/coverted/blurred_img."+extension, blurred_img)
+        # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
+        print(4)
 
         output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-        cv2.imwrite("public/images/coverted/" +
-                    fname+"bg_blurred."+extension, output)
+        cv2.imwrite(fname + "bg_blurred."+extension, output)
 
-        # '''creating style transfer'''
-        output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask))
-        cv2.imwrite("public/images/coverted/" +
-                    fname+"style_transfer."+extension, output)
+        print(5)
+        '''creating style transfer'''
+        output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
+        cv2.imwrite(fname + "style_transfer."+extension, output)
+        print(6)
