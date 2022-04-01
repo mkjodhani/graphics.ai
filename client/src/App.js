@@ -7,6 +7,8 @@ import LogIn from "./components/pages/authentication/LogIn";
 import SignIn from "./components/pages/authentication/SignIn";
 import HomePage from "./components/HomePage";
 import Editor from './components/pages/editor/Editor'
+import TransformBackground from "./components/pages/converter/TransformBackground";
+import BlurBackground from "./components/pages/converter/BlurBackground";
 export default function Root() {
   return (
     <Provider store={store}>
@@ -23,6 +25,8 @@ function App() {
       <Route path="/register" element={<SignIn />} />
       <Route path="/editor" element={<Editor />} />
       <Route path="/modeling" element={<Model />} />
+      <Route path="/image-blur" element={<BlurBackground />} />
+      <Route path="/image-tranform" element={<TransformBackground />} />
       <Route path="/modeling/layout" element={<Layout />} />
     </Routes>
   );
