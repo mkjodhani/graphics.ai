@@ -62,12 +62,8 @@ class TransformImage(object):
 
     def tranform(self):
         fname, extension = os.path.basename(self.filename).split('.')
-<<<<<<< HEAD
-        output_fname = "/public/images/converted/" + fname + " preview."+extension
-=======
         output_fname = "public/images/converted/" + fname + "_1."+extension
 
->>>>>>> 087ae64b372030eb82b1096391467bc6abd6ea6a
         ins = instanceSegmentation()
         ins.load_model("server/flaskr/transformer/pointrend_resnet50.pkl")
         self.segmap = ins.segmentImage(self.filename, extract_segmented_objects=True,
@@ -80,20 +76,6 @@ class TransformImage(object):
         # cv2.imwrite("server/public/images/converted/" + fname + " masked_img."+extension, self.mask)
 
         self.img = cv2.imread(self.filename)
-<<<<<<< HEAD
-
-        if self.type == "Blur":
-            # '''creating bokeh image'''
-            blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
-            # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
-
-            output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
-            cv2.imwrite("server/temporary/"+fname + "bg_blurred."+extension, output)
-        else:
-            '''creating style transfer'''
-            output = self.bg_style_transfer(self.bg_filename, numpy.shape(self.mask), self.img)
-            cv2.imwrite("server/temporary/"+fname + "style_transfer."+extension, output)
-=======
         blurred_img = cv2.GaussianBlur(self.img, (25, 25), 0)
         # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
         
@@ -152,4 +134,3 @@ class BlurImage(object):
         # cv2.imwrite("server/public/images/converted/" + fname + " blurred_img."+extension, blurred_img)
         output = numpy.where(self.mask != [255, 255, 255], blurred_img, self.img)
         cv2.imwrite("public/images/converted/"+ fname + "_blured."+extension, output)
->>>>>>> 087ae64b372030eb82b1096391467bc6abd6ea6a
