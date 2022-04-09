@@ -27,6 +27,7 @@ export default class Viewport extends THREE.Scene {
         
         //creating camera
         this.controlledCamera = new ControlledCamera(width, height, cameraPosition, domElement);
+        this.controlledCamera.turnOn();
         this.add(this.controlledCamera.getActiveCamera());
 
         //creating renderer
@@ -58,17 +59,6 @@ export default class Viewport extends THREE.Scene {
         const negativeAxes = new THREE.AxesHelper(-100);
         this.helper.axesGroup.add(negativeAxes);
         this.helper.group.add(this.helper.axesGroup);
-
-        //creating light
-        this.directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-        this.directionalLight.position.copy(this.controlledCamera.activeCamera.position)
-        //this.helper.group.add(this.directionalLight)
-        this.add(this.directionalLight);
-
-        this.ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
-        // this.helper.group.add(this.ambientLight)
-        this.add(this.ambientLight);
-
         this.add(this.helper.group);
 
         //create raycaster
@@ -80,7 +70,7 @@ export default class Viewport extends THREE.Scene {
             //perform raycasting to detect selection
             if(this.mouse.clicked){
                 this.raycaster.setFromCamera(this.mouse.pointer, this.controlledCamera.activeCamera);
-                const intersects = this.raycaster.intersectObjects(this.children);
+                const intersects = this.raycaster.intersectObjects(this.children, false);
                 for ( let i = 0; i < intersects.length; i ++ ) {
                     this.onIntersectedObject(intersects[i].object);
                 }

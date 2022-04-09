@@ -15,7 +15,17 @@ import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import PropertyController from "../propertyController/PropertyController";
 import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
 import TextProperty from "../propertyController/meshPropertyController/TextProperty";
-export default class MeshGenerator {
+import InteractiveLight from "../interactiveObjects/InteractiveLight";
+import DirectionalLightProperty from "../propertyController/lightPropertyController/DirectionalLightProperty";
+import { HemisphereLightHelper, PointLightHelper, SpotLightHelper } from "three";
+import HemisphereLightProperty from "../propertyController/lightPropertyController/HemisphereLightProperty";
+import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper';
+import RectAreaLightProperty from "../propertyController/lightPropertyController/RectAreaLightProperty";
+import SpotLightProperty from "../propertyController/lightPropertyController/SpotLightProperty";
+import PointLightProperty from "../propertyController/lightPropertyController/PointLightProperty";
+import InteractiveModel from "../interactiveObjects/InteractiveModel";
+
+export default class ObjectGenerator {
     static OBJECT_TYPE = {
         MESH: {
             PLANE: 0,
@@ -29,8 +39,15 @@ export default class MeshGenerator {
             TEXT: 8
         },
         CAMERA: 9,
-        LIGHT: 10,
-        OBJ: 11
+        LIGHT: {
+            AMBIENT: 10,
+            DIRECTIONAL:11,
+            HEMISPHERE: 12,
+            POINT: 13,
+            RECTAREA: 14,
+            SPOT:15
+        },
+        OBJ: 16
     };
 
     constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
@@ -55,7 +72,7 @@ export default class MeshGenerator {
         let geometry = new THREE.PlaneBufferGeometry(1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new PlaneProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -76,7 +93,7 @@ export default class MeshGenerator {
         let geometry = new THREE.BoxBufferGeometry(1, 1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new BoxProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -97,7 +114,7 @@ export default class MeshGenerator {
         let geometry = new THREE.CircleBufferGeometry(1, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new CircleProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -118,7 +135,7 @@ export default class MeshGenerator {
         let geometry = new THREE.SphereBufferGeometry(1, 30, 30);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new SphereProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -139,7 +156,7 @@ export default class MeshGenerator {
         let geometry = new THREE.IcosahedronBufferGeometry(1, 2);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new IcosahedronProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -160,7 +177,7 @@ export default class MeshGenerator {
         let geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 20);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new CylinderProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -181,7 +198,7 @@ export default class MeshGenerator {
         let geometry = new THREE.ConeBufferGeometry(1, 2, 10, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new ConeProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -202,7 +219,7 @@ export default class MeshGenerator {
         let geometry = new THREE.TorusBufferGeometry(.5, 0.1, 10, 50);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        mesh.position.copy(this.cursorPoint);
         if (attachProperties) {
             properties = new TorusProperty(mesh, this.propertiesPane);
             properties.initProperties();
@@ -247,13 +264,14 @@ export default class MeshGenerator {
     addCamera(attachProperties = true){
         let object = this.createCamera(attachProperties);
         this.viewport.add(object);
+        this.viewport.add(object.camera);
         return object;
     }
 
     createCamera(attachProperties = true) {
-        let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 1000);
+        let camera = new THREE.PerspectiveCamera(50, 1920 / 1200, 0.1, 50);
         let interactiveCamera = new InteractiveCamera(this.viewport, camera);
-        interactiveCamera.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
+        interactiveCamera.position.copy(this.cursorPoint);
         let properties;
         if(attachProperties){
             properties = new CameraPropertyController(interactiveCamera, this.propertiesPane);
@@ -263,36 +281,125 @@ export default class MeshGenerator {
         return interactiveCamera;
     }
 
-    addLight(attachProperties = true){
-        let object = this.createLight(attachProperties);
+    createAmbientLight(attachProperties = true) {
+        let light = new THREE.AmbientLight(0xffffff, 0.5);
+        if(attachProperties){
+            //TODO: add color and intensity property
+        }
+        return light;
+    }
+
+    addAmbientLight(attachProperties = true){
+        let object = this.createAmbientLight(attachProperties);
         this.viewport.add(object);
         return object;
     }
 
-    createLight() {
-        let light = new THREE.Light();
-        
-        let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
-        let mesh = new InteractiveMesh(this.viewport, light, material);
-        mesh.position.set(this.cursorPoint.x, this.cursorPoint.y, this.cursorPoint.z);
-        
-        return mesh;
+    addLight(createLight, attachProperties){
+        let object = createLight.call(this, attachProperties);
+        this.viewport.add(object);
+        this.viewport.add(object.light);
+        return object;
     }
 
-    addObj(objFile, attachProperties = true){
+    createLight(lightHelper, LightPropertyController, attachProperties=true){
+        // lightHelper.light.position.copy(this.cursorPoint);
+        let interactiveLight = Object.assign(lightHelper, new InteractiveLight(this.viewport, lightHelper));
+        if(attachProperties){
+            lightHelper.properties = new LightPropertyController(interactiveLight, this.propertiesPane);
+            lightHelper.properties.initProperties();
+        }
+        return lightHelper;
+    }
+
+    createDirectionalLight(attachProperties=true){
+        let light = new THREE.DirectionalLight(0xffffff, 0.5);
+        return this.createLight(
+            new THREE.DirectionalLightHelper(light),
+            DirectionalLightProperty,
+            attachProperties
+        );
+    }
+
+    addDirectionalLight(attachProperties=true){
+        return this.addLight(this.createDirectionalLight, attachProperties);
+    }
+
+    addHemisphereLight(attachProperties=true){
+        return this.addLight(this.createHemisphereLight, attachProperties);
+    }
+
+    createHemisphereLight(attachProperties=true){
+        let light = new THREE.HemisphereLight(0x99ccff, 0x663300, 0.5);
+        return this.createLight(
+            new HemisphereLightHelper(light),
+            HemisphereLightProperty,
+            attachProperties
+        );
+    }
+
+    createPointLight(attachProperties=true){
+        let light = new THREE.PointLight(0xffffff, 0.5);
+        return this.createLight(
+            new PointLightHelper(light),
+            PointLightProperty,
+            attachProperties
+        );
+    }
+
+    addPointLight(attachProperties=true){
+        return this.addLight(this.createPointLight, attachProperties);
+    }
+
+    createRectAreaLight(attachProperties=false){
+        let light = new THREE.RectAreaLight(0xffffff, 0.5);
+        return this.createLight(
+            new RectAreaLightHelper(light),
+            RectAreaLightProperty,
+            attachProperties
+        );
+    }
+
+    addRectAreaLight(attachProperties=true){
+        return this.addLight(this.createRectAreaLight, attachProperties);
+    }
+
+    createSpotLight(attachProperties=true){
+        let light = new THREE.SpotLight(0xffffff, 0.5);
+        return this.createLight(
+            new SpotLightHelper(light),
+            SpotLightProperty,
+            attachProperties
+        );
+    }
+
+    addSpotLight(attachProperties=true){
+        return this.addLight(this.createSpotLight, attachProperties);
+    }
+
+    attachPropertiesToObj(object, name='Obj'){
+        new InteractiveModel(this.viewport, object);
+        let properties = new PropertyController(object, this.propertiesPane, name);
+        properties.initProperties();
+        object.properties = properties;
+        return object;
+    }
+
+    parseAndAddObj(objectData, attachProperties=true, name='Obj'){
+        let object = this.objLoader.parse(objectData);
+        if(attachProperties){
+            this.attachPropertiesToObj(object);
+        }
+        this.viewport.add(object);
+    }
+
+    addObj(objFile, attachProperties = true, name='Obj'){
         this.objLoader.load(
             objFile,
             (object)=>{
                 if(attachProperties){
-                    object.helper = new InteractiveObjectHelper(this.viewport, object, false);
-                    object.onVisibleChange = ()=>{};
-                    let properties = new PropertyController(object, this.propertiesPane, objFile);
-                    properties.initProperties();
-                    object.properties = properties;
+                    this.attachPropertiesToObj(object, name);
                 }
-                object.scale.x /= 16;
-                object.scale.y /= 16;
-                object.scale.z /= 16;
                 this.viewport.add(object);
             },
             (xhr)=>{
@@ -304,39 +411,75 @@ export default class MeshGenerator {
             }
         );
     }
+
+    importObj(){
+        const fileInputElement = document.createElement('input');
+        fileInputElement.setAttribute('type', 'file');
+        fileInputElement.setAttribute('accept', '.obj');
+        fileInputElement.onchange = () => {
+            let fileReader = new FileReader();
+            let file = fileInputElement.files[0];
+
+            fileReader.onload = () => {
+                this.parseAndAddObj(fileReader.result);
+            };
+            if (file) {
+                fileReader.readAsBinaryString(file);
+            }
+        };
+        fileInputElement.click();
+    }
     
     create(objectType, attachProperties = true) {
         switch (objectType) {
 
-            case MeshGenerator.OBJECT_TYPE.MESH.PLANE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.PLANE:
                 return this.createPlane(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.CUBE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CUBE:
                 return this.createCube(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.CIRCLE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CIRCLE:
                 return this.createCircle(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.UVSPHERE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.UVSPHERE:
                 return this.createUVSphere(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.ICOSPHERE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.ICOSPHERE:
                 return this.createIcoSphere(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.CYLINDER:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CYLINDER:
                 return this.createCylinder(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.CONE:
+            case ObjectGenerator.OBJECT_TYPE.MESH.CONE:
                 return this.createCone(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.MESH.TORUS:
+            case ObjectGenerator.OBJECT_TYPE.MESH.TORUS:
                 return this.createTorus(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.CAMERA:
+            case ObjectGenerator.OBJECT_TYPE.CAMERA:
                 return this.createCamera(attachProperties);
 
-            case MeshGenerator.OBJECT_TYPE.LIGHT:
-                return this.createLight(attachProperties);
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.AMBIENT:
+                return this.createAmbientLight(attachProperties);
+            
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.DIRECTIONAL:
+                return this.createDirectionalLight(attachProperties);
+            
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.HEMISPHERE:
+                return this.createHemisphereLight(attachProperties);
+            
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.POINT:
+                return this.createPointLight(attachProperties);
+            
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.RECTAREA:
+                return this.createRectAreaLight(attachProperties);
+            
+            case ObjectGenerator.OBJECT_TYPE.LIGHT.SPOT:
+                return this.createSpotLight(attachProperties);
+                
+            default:
+                break
         }
     }
 }
