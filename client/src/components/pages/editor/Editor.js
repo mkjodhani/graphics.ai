@@ -40,13 +40,15 @@ export default class Editor{
             .onChange(()=>{ 
                this.cameraSelector.switchCamera();
             });
-        //FIXME:handle camera deletion 
         this.cameraSelector.onAddCamera = (camera)=>{
             let option= document.createElement('option');
             option.value = camera.name;
             option.innerHTML = camera.name;
             cameraSwitchOption.__select.appendChild(option);
         };
+        this.cameraSelector.onDeleteCamera = (camera)=>{
+            cameraSwitchOption.__select.querySelector('option[value="'+camera.name+'"]').remove();
+        }
 
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
