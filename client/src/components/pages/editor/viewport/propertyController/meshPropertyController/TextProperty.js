@@ -17,7 +17,6 @@ export default class TextProperty extends MeshPropertyController{
     initProperties(){
         super.initProperties();
 
-        console.log(this.geometryData);
         this.geometryPropertyFolder.add(this.geometryData, 'text').onFinishChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData.options, 'size').min(0.1).max(100).step(0.01).onChange(this.regenerate);
         this.geometryPropertyFolder.add(this.geometryData.options, 'height').min(0.1).max(100).step(0.01).onChange(this.regenerate);

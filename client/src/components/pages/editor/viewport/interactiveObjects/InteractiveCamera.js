@@ -6,6 +6,7 @@ export default class InteractiveCamera extends CameraHelper{
         super(camera);
         this.type = "InteractiveCamera";
 
+        this.camera.name = 'Camera-'+this.id;
         this.camera.helper = new InteractiveObjectHelper(viewport, this.camera, false, selectionColor);
         this.camera.onVisibleChange = () =>{
             this.camera.helper.onVisibleChange();

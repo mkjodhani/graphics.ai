@@ -13,7 +13,6 @@ import InteractiveCamera from "../interactiveObjects/InteractiveCamera";
 import CameraPropertyController from "../propertyController/CameraPropertyController";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import PropertyController from "../propertyController/PropertyController";
-import InteractiveObjectHelper from "../interactiveObjects/InteractiveObjectHelper";
 import TextProperty from "../propertyController/meshPropertyController/TextProperty";
 import InteractiveLight from "../interactiveObjects/InteractiveLight";
 import DirectionalLightProperty from "../propertyController/lightPropertyController/DirectionalLightProperty";
@@ -50,10 +49,11 @@ export default class ObjectGenerator {
         OBJ: 16
     };
 
-    constructor(viewport, propertiesPane, cursorPoint = new THREE.Vector3(0, 0, 0)) {
+    constructor(viewport, propertiesPane, cameraSelector, cursorPoint = new THREE.Vector3(0, 0, 0)) {
         this.viewport = viewport;
         this.cursorPoint = cursorPoint;
         this.propertiesPane = propertiesPane;
+        this.cameraSelector = cameraSelector;
 
         this.loadingManager = new THREE.LoadingManager();
         this.objLoader = new OBJLoader(this.loadingManager);
@@ -265,6 +265,7 @@ export default class ObjectGenerator {
         let object = this.createCamera(attachProperties);
         this.viewport.add(object);
         this.viewport.add(object.camera);
+        this.cameraSelector.add(object.camera);
         return object;
     }
 
