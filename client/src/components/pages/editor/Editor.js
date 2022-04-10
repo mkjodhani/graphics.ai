@@ -2,6 +2,7 @@ import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
 import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import CameraSelector from './viewport/CameraSelector';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
@@ -27,10 +28,30 @@ export default class Editor{
         this.toolBox = new ToolBox(this.viewport);
         this.bindToolBox();
 
+        //add cameraSelector
+        this.cameraSelector = new CameraSelector(this.viewport.controlledCamera.activeCamera, 
+            (camera)=>{
+                this.viewport.controlledCamera.changeCamera(camera);
+            }
+        );
+        let cameraSwitchOption = this.propertiesPane.add(this.cameraSelector, 'currentCameraName', Array.from(this.cameraSelector.keys()))
+            .name('Camera')
+            .listen()
+            .onChange(()=>{ 
+               this.cameraSelector.switchCamera();
+            });
+        //FIXME:handle camera deletion 
+        this.cameraSelector.onAddCamera = (camera)=>{
+            let option= document.createElement('option');
+            option.value = camera.name;
+            option.innerHTML = camera.name;
+            cameraSwitchOption.__select.appendChild(option);
+        };
+
         //add addMesh menu
         this.sceneOutliner = this.propertiesPane.addFolder('Scene Outliner');
         this.sceneOutliner.open();
-        this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner);
+        this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner, this.cameraSelector);
         this.bindAddOption();
         this.objectGenerator.addCube();
         
@@ -66,11 +87,8 @@ export default class Editor{
             }
         };
         this.viewport.controlledCamera.onCameraSwitch();
-
-        //TODO: add camera change option
-        // this.cameraType = 'Primary';
-        // this.propertiesPane.add(this, 'cameraType', [ 'Primary', 'Orthographic']);
     }
+
 
     bindAddOption(){
         const addOptionFolder = this.propertiesPane.addFolder('Add');
