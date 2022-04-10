@@ -48,7 +48,7 @@ function ProductValues() {
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Box sx={item} onClick={() => alert('yet to be linked!')}>
+            <Box sx={item} onClick={() => navigate('/textureUtils')}>
               <Box
                 component="img"
                 src="/static/themes/graphicsAI/productValues1.png"
@@ -69,7 +69,7 @@ function ProductValues() {
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-          <Box sx={item} onClick={() => alert('yet to be linked!')}>
+            <Box sx={item} onClick={() => alert('yet to be linked!')}>
               <Box
                 component="img"
                 src="/static/themes/graphicsAI/productValues3.png"
