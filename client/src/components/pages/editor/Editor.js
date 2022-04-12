@@ -3,6 +3,7 @@ import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
 import ObjectGenerator from './viewport/utils/ObjectGenerator';
 import CameraSelector from './viewport/CameraSelector';
+import { Vector3 } from 'three';
 
 export default class Editor{
     constructor(viewportCanvas, toolBarElement, propertiesPaneContainer){
@@ -55,8 +56,10 @@ export default class Editor{
         this.sceneOutliner.open();
         this.objectGenerator = new ObjectGenerator(this.viewport, this.sceneOutliner, this.cameraSelector);
         this.bindAddOption();
-        this.objectGenerator.addCube();
-        
+    
+        //add initial objects
+        this.initObjects();
+
         //add render option
         this.renderMode = false;
         this.propertiesPane.add(this, 'renderMode').name('Render').onChange(()=>{
@@ -64,6 +67,15 @@ export default class Editor{
             if(this.renderMode)
                 this.propertiesPane.close();
         });
+    }
+
+    initObjects(){
+        this.objectGenerator.addCube();
+        this.objectGenerator.addAmbientLight();
+        this.objectGenerator.cursorPoint = new Vector3(-4,3,2);
+        let directionalLight =  this.objectGenerator.addDirectionalLight();
+        this.objectGenerator.cursorPoint = new Vector3(0,0,0);
+        console.log(directionalLight);
     }
 
     bindCameraProperties(){
