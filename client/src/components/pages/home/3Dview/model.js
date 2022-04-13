@@ -120,7 +120,7 @@ export function main(canvas) {
 
     const gltfLoader = new GLTFLoader()
     gltfLoader.load(
-        '/assets/office/FullScene/fullscene.gltf',
+        'assets/office/FullScene/fullscene.gltf',
         (object) => {
             console.log(object);
             while (object.scene.children.length) {
@@ -244,4 +244,3 @@ export function main(canvas) {
 
     animationLoop()
 }
-main();
