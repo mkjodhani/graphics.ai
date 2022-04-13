@@ -1,9 +1,0 @@
-.layoutDiv{
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-.layoutBody{
-    margin-top: 4pc;
-    flex: 1;
-}
