@@ -69,7 +69,7 @@ export default class ObjectGenerator {
 
     createPlane(attachProperties = true) {
         let properties;
-        let geometry = new THREE.PlaneBufferGeometry(1, 1);
+        let geometry = new  THREE.PlaneGeometry(1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091, side: THREE.DoubleSide });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -90,7 +90,7 @@ export default class ObjectGenerator {
 
     createCube(attachProperties = true) {
         let properties;
-        let geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+        let geometry = new  THREE.BoxGeometry(1, 1, 1);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -111,7 +111,7 @@ export default class ObjectGenerator {
 
     createCircle(attachProperties = true) {
         let properties;
-        let geometry = new THREE.CircleBufferGeometry(1, 10);
+        let geometry = new  THREE.CircleGeometry(1, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -132,7 +132,7 @@ export default class ObjectGenerator {
 
     createUVSphere(attachProperties = true) {
         let properties;
-        let geometry = new THREE.SphereBufferGeometry(1, 30, 30);
+        let geometry = new  THREE.SphereGeometry(1, 30, 30);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -153,7 +153,7 @@ export default class ObjectGenerator {
 
     createIcoSphere(attachProperties = true) {
         let properties;
-        let geometry = new THREE.IcosahedronBufferGeometry(1, 2);
+        let geometry = new  THREE.IcosahedronGeometry(1, 2);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -174,7 +174,7 @@ export default class ObjectGenerator {
 
     createCylinder(attachProperties = true) {
         let properties;
-        let geometry = new THREE.CylinderBufferGeometry(1, 1, 1, 20, 20);
+        let geometry = new  THREE.CylinderGeometry(1, 1, 1, 20, 20);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -195,7 +195,7 @@ export default class ObjectGenerator {
 
     createCone(attachProperties = true) {
         let properties;
-        let geometry = new THREE.ConeBufferGeometry(1, 2, 10, 10);
+        let geometry = new  THREE.ConeGeometry(1, 2, 10, 10);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -216,7 +216,7 @@ export default class ObjectGenerator {
 
     createTorus(attachProperties = true) {
         let properties;
-        let geometry = new THREE.TorusBufferGeometry(.5, 0.1, 10, 50);
+        let geometry = new  THREE.TorusGeometry(.5, 0.1, 10, 50);
         let material = new THREE.MeshStandardMaterial({ color: 0x8e9091 });
         let mesh = new InteractiveMesh(this.viewport, geometry, material);
         mesh.position.copy(this.cursorPoint);
@@ -230,7 +230,7 @@ export default class ObjectGenerator {
     }
 
     createText(text='graphicsAI', font, attachProperties = true){
-        let geometry = new THREE.TextBufferGeometry(text, {
+        let geometry = new  THREE.TextGeometry(text, {
             font,
             size: 0.5,
             height: 0.2,

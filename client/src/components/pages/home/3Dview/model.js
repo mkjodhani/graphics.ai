@@ -6,18 +6,13 @@ import * as TWEEN from '@tweenjs/tween.js'
 import * as dat from 'dat.gui'
 import { sRGBEncoding, Vector3 } from 'three'
 
-export function main(canvas) {
-
+export function main(parent) {
     var certainAmount
     var hideHomePage
-    var certainAmount
     var unhideHomePage
 
     // Debug
     const gui = new dat.GUI()
-
-    // Canvas
-    // const canvas = document.querySelector('canvas.office')
 
     // Scene
     const scene = new THREE.Scene()
@@ -34,37 +29,7 @@ export function main(canvas) {
 
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
-    
-    window.addEventListener('resize', () => {
-        // Update size
-        sizes.width = window.innerWidth
-        sizes.height = window.innerHeight
 
-        // Update camera
-        camera.aspect = sizes.width / sizes.height
-        camera.updateProjectionMatrix()
-
-        // Update renderer
-        renderer.setSize(sizes.width, sizes.height)
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-    })
-
-    window.addEventListener('dblclick', () => {
-        const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
-        if (!fullscreenElement) {
-            if (canvas.requestFullscreen())
-                canvas.requestFullscreen()
-            else if (canvas.webkitRequestFullscreen)
-                canvas.webkitRequestFullscreen()
-        }
-        else {
-            if (canvas.exitFullScreen)
-                canvas.exitFullScreen()
-            else if (canvas.webkitExitFullScreen)
-                canvas.webkitExitFullScreen()
-        }
-    })
 
     window.addEventListener('pointermove', onPointerMove);
 
@@ -99,6 +64,50 @@ export function main(canvas) {
     gui.add(position, 'y').min(-100).max(100).step(1).name('LookAt Y')
     gui.add(position, 'z').min(-100).max(100).step(1).name('LookAt Z')
 
+    /**
+     * Renderer
+     */
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true
+    })
+    parent.appendChild(renderer.domElement);
+    const canvas = renderer.domElement;
+
+    renderer.setSize(sizes.width, sizes.height)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    renderer.physicallyCorrectLights = true
+    renderer.outputEncoding = sRGBEncoding
+
+    window.addEventListener('resize', () => {
+        // Update size
+        sizes.width = window.innerWidth
+        sizes.height = window.innerHeight
+
+        // Update camera
+        camera.aspect = sizes.width / sizes.height
+        camera.updateProjectionMatrix()
+
+        // Update renderer
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+    })
+
+    window.addEventListener('dblclick', () => {
+        const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+        if (!fullscreenElement) {
+            if (canvas.requestFullscreen())
+                canvas.requestFullscreen()
+            else if (canvas.webkitRequestFullscreen)
+                canvas.webkitRequestFullscreen()
+        }
+        else {
+            if (canvas.exitFullScreen)
+                canvas.exitFullScreen()
+            else if (canvas.webkitExitFullScreen)
+                canvas.webkitExitFullScreen()
+        }
+    })
 
     // Controls
     const controls = new OrbitControls(camera, canvas)
@@ -130,19 +139,6 @@ export function main(canvas) {
             }
         }
     )
-
-
-    /**
-     * Renderer
-     */
-    const renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        antialias: true
-    })
-    renderer.setSize(sizes.width, sizes.height)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    renderer.physicallyCorrectLights = true
-    renderer.outputEncoding = sRGBEncoding
 
     function selectObject() {
 
@@ -195,7 +191,7 @@ export function main(canvas) {
     // raycasting will be implemented in different function for reducing redundancy
     let INTERSECTED = null;
     function onPointerMove(event) {
-        
+
         pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
