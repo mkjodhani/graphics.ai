@@ -8,7 +8,8 @@ import { sRGBEncoding, Vector3 } from 'three'
 export default class OfficeScene {
     constructor(canvas) {
 
-        let certainAmount
+        let scrollAmount;
+
         //override this two methods on monitor scroll event
         this.onHideHomePage = null;
         this.onUnhideHomePage = null;
@@ -71,19 +72,30 @@ export default class OfficeScene {
         window.addEventListener('click', selectObject)
 
         let isHomePageVisible = true;
-        window.addEventListener('scroll', (event) => {
+
+        function updateTexture(imgURL){
+            new THREE.TextureLoader().load(
+                imgURL, 
+                (texture)=>{
+                    scene.getObjectByName('Plane').material.map = texture;
+                    scene.getObjectByName('Plane').material.needsUpdate = true;
+                }
+            )
+        }
+        
+        window.addEventListener('scroll', () => {
             let lastScrollPos = window.scrollY;
+            scrollAmount = 700; // scroll amount needs to determined based responsiveness
 
-            if (lastScrollPos > certainAmount && isHomePageVisible) {
-                isHomePageVisible = false
+            if (lastScrollPos > scrollAmount && isHomePageVisible) {
+                isHomePageVisible = false;
                 //TODO: hide homepage; replace with screenshot: editorSS.png
-                this.onHideHomePage()
-
+                this.onHideHomePage();
             }
-            if (lastScrollPos < certainAmount && !isHomePageVisible) {
-                isHomePageVisible = true
+            if (lastScrollPos < scrollAmount && !isHomePageVisible) {
+                isHomePageVisible = true;
                 //TODO: unhide homepage; remove screenshot : editorSS.png
-                this.onUnhideHomePage()
+                this.onUnhideHomePage();
             }
         })
 
@@ -224,6 +236,8 @@ export default class OfficeScene {
         }
 
 
+        let zoom = controls.target.distanceTo( controls.object.position );
+        let isScreenChanged = false;
 
         // Animation
         const animationLoop = () => {
@@ -233,8 +247,20 @@ export default class OfficeScene {
 
             // TWEEN.update()
 
+
+            // Change monitor screen based on zoom
+            zoom = controls.target.distanceTo( controls.object.position )
+            if(zoom > 1.5 && !isScreenChanged){
+                isScreenChanged = true
+                updateTexture('/assets/office/FullScene/editorSS.png')
+            } 
+            if(zoom < 1.5 && isScreenChanged) {
+                isScreenChanged = false
+                updateTexture('/assets/office/FullScene/ash-edmonds-0aWZdK8nK2I-unsplash.jpg')
+            }
+
             camera.lookAt(position)
-            // controls.target = position
+            controls.target = position
 
             renderer.render(scene, camera)
 
