@@ -1,15 +1,18 @@
 import React, { Component, useEffect } from 'react'
-import { main } from './model'
+import OfficeScene from './OfficeScene'
 class OfficeComponent extends Component {
     componentDidMount() {
-        // const viewportCanvas = document.getElementById('office');
-        // officeJS(viewportCanvas)
-        main(this.mount)
-        console.log(this.mount);
+        this.officeScene = new OfficeScene(this.mount);
+        this.officeScene.onHideHomePage = ()=>{
+            //write logic to hide ProductHeroLayout 
+        };
+        this.officeScene.onUnhideHomePage = ()=>{
+            //write logic to unhide ProductHeroLayout 
+        };
     }
     render() {
         return (
-            <canvas id="office" ref={ref => this.mount = ref}/>
+            <canvas id="office" ref={ref => this.mount = ref} style={{width:'100%'}}/>
         )
     }
 }
