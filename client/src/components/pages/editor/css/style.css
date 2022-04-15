@@ -2,8 +2,6 @@ html,
 body{
     margin: 0;
     height: 100%;
-    background-color: #424242;
-    color: antiquewhite;
 }
 
 #menubar{
@@ -30,6 +28,8 @@ body{
     height: 100%;
     display: flex;
     flex-flow: row;
+    background-color: #424242;
+    color: antiquewhite;
 }
 
 @media screen and (orientation: portrait) {

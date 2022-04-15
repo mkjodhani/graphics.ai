@@ -1,0 +1,16 @@
+@font-face {
+    font-family: "Lobster";
+    src: url('./Lobster-Regular.ttf');
+}
+@font-face {
+    font-family: BlackSwan;
+    src: url("./Black\ Swan\ BF\ W00\ Regular.ttf");
+}
+@font-face {
+    font-family: DancingScript;
+    src: url("./DancingScript-VariableFont_wght.ttf");
+}
+@font-face {
+    font-family: PalatinoLinotype;
+    src: url("./palatino-linotype.ttf");
+}
