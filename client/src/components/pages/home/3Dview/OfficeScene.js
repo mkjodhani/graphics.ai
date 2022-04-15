@@ -67,7 +67,7 @@ export default class OfficeScene {
             }
         })
 
-        // window.addEventListener('pointermove', onPointerMove);
+        window.addEventListener('pointermove', onPointerMove);
 
         window.addEventListener('click', selectObject)
 
@@ -204,35 +204,11 @@ export default class OfficeScene {
         }
 
 
-        // raycasting will be implemented in different function for reducing redundancy
-        let INTERSECTED = null;
         function onPointerMove(event) {
 
             pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
             pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
 
-            raycaster.setFromCamera(pointer, camera);
-
-            const intersects = raycaster.intersectObjects(scene.children, true);
-
-            if (intersects.length > 0) {
-
-                if (intersects[0].object.parent.name === "kitap_kitap_1_Cube001" || intersects[0].object.parent.name === "kitap_kitap_1_Cube003") {
-                    console.log('Lets read');
-                    // hover(intersects[0].object.parent)
-                }
-                if (intersects[0].object.getObjectByName('Plane')) {
-                    console.log('Plane');
-                }
-                if (intersects[0].object.parent.name === "Photoframe") {
-                    console.log("Yay Photoframe!!");
-                }
-
-                if (intersects[0].object.parent.name === "Headphone") {
-                    console.log("Relax with Music!!");
-                }
-
-            }
         }
 
 
@@ -247,23 +223,22 @@ export default class OfficeScene {
 
             // TWEEN.update()
 
-
+            
+            camera.lookAt(position)
+            controls.target = position
+            
+            renderer.render(scene, camera)
+            
             // Change monitor screen based on zoom
             zoom = controls.target.distanceTo( controls.object.position )
-            if(zoom > 1.5 && !isScreenChanged){
+            if(zoom >= 1.06 && !isScreenChanged){
                 isScreenChanged = true
                 updateTexture('/assets/office/FullScene/editorSS.png')
             } 
-            if(zoom < 1.5 && isScreenChanged) {
+            if(zoom < 1.06 && isScreenChanged) {
                 isScreenChanged = false
                 updateTexture('/assets/office/FullScene/ash-edmonds-0aWZdK8nK2I-unsplash.jpg')
             }
-
-            camera.lookAt(position)
-            controls.target = position
-
-            renderer.render(scene, camera)
-
             window.requestAnimationFrame(animationLoop)
         }
         // Also get more control over it using GSAP
