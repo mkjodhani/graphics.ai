@@ -70,7 +70,7 @@ const images = [
     width: '25%',
   },
   {
-    url: '/static/themes/graphicsAI/features/feature4.jpg',
+    url: '/static/themes/graphicsAI/features/feature4.webp',
     title: 'Image Blur',
     width: '50%',
   },

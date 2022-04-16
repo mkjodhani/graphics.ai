@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.3",
     "@mui/material": "^5.6.0",
     "@mui/styles": "^5.6.0",
+    "@shopify/polaris": "^9.4.0",
     "@testing-library/jest-dom": "^5.16.3",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
