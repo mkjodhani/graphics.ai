@@ -9,6 +9,10 @@ class OfficeComponent extends Component {
         this.officeScene.onUnhideHomePage = ()=>{
             //write logic to unhide ProductHeroLayout 
         };
+        this.officeScene.onAfterLoad = ()=>{
+            //TODO: remove loading preview
+            
+        }
     }
     render() {
         return (
