@@ -115,7 +115,7 @@ export default class OfficeScene {
         // Controls
         const controls = new OrbitControls(camera, canvas)
         controls.enableDamping = true
-        controls.minZoom = 1
+        controls.minZoom = 2
         controls.minDistance = 1
         controls.maxDistance = 7.5
         controls.minPolarAngle = Math.PI / 16
