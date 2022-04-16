@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component } from 'react'
 import './css/style.css'
 import Editor from './Editor';
 class EditorComponent extends Component {
