@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component } from 'react'
 import OfficeScene from './OfficeScene'
 class OfficeComponent extends Component {
     componentDidMount() {
@@ -13,6 +13,14 @@ class OfficeComponent extends Component {
             //TODO: remove loading preview
             
         }
+        var observer = new IntersectionObserver((entries)=> {
+            if(entries[0].isIntersecting === true){
+                entries[0].target.scrollIntoView(true);
+                this.officeScene.controls.enableZoom = true;
+            }
+        }, { threshold: [0.3] });
+        
+        observer.observe(this.mount);
     }
     render() {
         return (

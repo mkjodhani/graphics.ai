@@ -3,17 +3,105 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import * as TWEEN from '@tweenjs/tween.js'
 import * as dat from 'dat.gui'
-import { sRGBEncoding, Vector3 } from 'three'
 
 export default class OfficeScene {
     constructor(canvas) {
-        this.canvas = canvas;
-        this.scene = new THREE.Scene();
 
-        this.sizes = {
-            width: this.canvas.getBoundingClientRect().width,
-            height: this.canvas.getBoundingClientRect().height
+        this.canvas = canvas;
+
+        //override this two methods on monitor scroll event
+        this.onHideHomePage = null;
+        this.onUnhideHomePage = null;
+
+        // Debug
+        const gui = new dat.GUI()
+
+        // Canvas
+        // const canvas = document.querySelector('canvas.office')
+
+        // Scene
+        this.scene = new THREE.Scene()
+        this.scene.background = new THREE.Color(0xf5f5f5);
+
+
+        /**
+         * Sizes
+         */
+        const sizes = {
+            width: canvas.getBoundingClientRect().width,
+            height: canvas.getBoundingClientRect().height
         }
+
+        window.addEventListener('resize', () => {
+            // Update size
+            sizes.width = window.innerWidth
+            sizes.height = window.innerHeight
+
+            // Update camera
+            this.camera.aspect = sizes.width / sizes.height
+            this.camera.updateProjectionMatrix()
+
+            // Update renderer
+            renderer.setSize(sizes.width, sizes.height)
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+        })
+
+        window.addEventListener('dblclick', () => {
+            const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
+            if (!fullscreenElement) {
+                if (canvas.requestFullscreen())
+                    canvas.requestFullscreen()
+                else if (canvas.webkitRequestFullscreen)
+                    canvas.webkitRequestFullscreen()
+            }
+            else {
+                if (canvas.exitFullScreen)
+                    canvas.exitFullScreen()
+                else if (canvas.webkitExitFullScreen)
+                    canvas.webkitExitFullScreen()
+            }
+        })
+
+        /**
+         * Camera
+         */
+        // Base camera
+        this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
+        this.camera.position.copy(new THREE.Vector3(-0.025, 4.1, 1))
+        this.scene.add(this.camera)
+
+        let position = new THREE.Vector3(0, 4, 0)
+        // gui.add(position, 'x').min(-100).max(100).step(1).name('LookAt X')
+        // gui.add(position, 'y').min(-100).max(100).step(1).name('LookAt Y')
+        // gui.add(position, 'z').min(-100).max(100).step(1).name('LookAt Z')
+
+        // Controls
+        this.controls = new OrbitControls(this.camera, canvas)
+        this.controls.enableDamping = true
+        this.controls.minZoom = 1
+        this.controls.minDistance = 1
+        this.controls.maxDistance = 7.5
+        this.controls.minPolarAngle = Math.PI / 16
+        this.controls.maxPolarAngle = Math.PI / 2
+        this.controls.minAzimuthAngle = -Math.PI / 3
+        this.controls.maxAzimuthAngle = Math.PI / 3
+
+        this.controls.addEventListener('end', (event)=>{
+            if(this.controls.getDistance() >= this.controls.maxDistance || this.controls.getDistance() === this.controls.minDistance){
+                this.controls.enableZoom = false;
+            }
+        });
+
+        // Light
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+        this.scene.add(directionalLight);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
+        this.scene.add(ambientLight);
+
+        this.raycaster = new THREE.Raycaster();
+        this.pointer = new THREE.Vector2();
 
         const gltfLoader = new GLTFLoader()
         gltfLoader.load(
@@ -25,174 +113,27 @@ export default class OfficeScene {
                     object.scene.children[0].position.setX(object.scene.children[0].position.x - 0.2)
                     this.scene.add(object.scene.children[0])
                 }
-                this.renderScene();
-                if(this.onAfterLoad)
-                    this.onAfterLoad();
+                this.onLoad();
+                animationLoop();
+                this.onAfterLoad();
             }
         )
+
 
         /**
          * Renderer
          */
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas,
+        const renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
             antialias: true
         })
-        this.renderer.setSize(this.sizes.width, this.sizes.height)
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-        this.renderer.physicallyCorrectLights = true
-        this.renderer.outputEncoding = sRGBEncoding
-
-        //override this two methods on monitor scroll event
-        this.onHideHomePage = null;
-        this.onUnhideHomePage = null;
-        this.onAfterLoad = null;
-    }
-
-    renderScene() {
-        let scrollAmount;
-
-        const raycaster = new THREE.Raycaster();
-        const pointer = new THREE.Vector2();
-
-        window.addEventListener('resize', () => {
-            // Update size
-            this.sizes.width = window.innerWidth
-            this.sizes.height = window.innerHeight
-
-            // Update camera
-            camera.aspect = this.sizes.width / this.sizes.height
-            camera.updateProjectionMatrix()
-
-            // Update this.renderer
-            this.renderer.setSize(this.sizes.width, this.sizes.height)
-            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-
-        })
-
-        window.addEventListener('dblclick', () => {
-            const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
-            if (!fullscreenElement) {
-                if (this.canvas.requestFullscreen())
-                    this.canvas.requestFullscreen()
-                else if (this.canvas.webkitRequestFullscreen)
-                    this.canvas.webkitRequestFullscreen()
-            }
-            else {
-                if (this.canvas.exitFullScreen)
-                    this.canvas.exitFullScreen()
-                else if (this.canvas.webkitExitFullScreen)
-                    this.canvas.webkitExitFullScreen()
-            }
-        })
-
-        window.addEventListener('pointermove', onPointerMove);
-
-        window.addEventListener('click', selectObject)
-
-        let isHomePageVisible = true;
-
-        window.addEventListener('scroll', () => {
-            let lastScrollPos = window.scrollY;
-            scrollAmount = 700; // scroll amount needs to determined based responsiveness
-
-            if (lastScrollPos > scrollAmount && isHomePageVisible) {
-                isHomePageVisible = false;
-                //TODO: hide homepage; replace with screenshot: editorSS.png
-                this.onHideHomePage();
-            }
-            if (lastScrollPos < scrollAmount && !isHomePageVisible) {
-                isHomePageVisible = true;
-                //TODO: unhide homepage; remove screenshot : editorSS.png
-                this.onUnhideHomePage();
-            }
-        })
-
-        /**
-         * Camera
-         */
-        // Base camera
-        const camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height)
-        camera.position.copy(new THREE.Vector3(-0.025, 4.1, 1))
-        this.scene.add(camera)
-
-        let position = new Vector3(0, 4, 0)
-
-        // Controls
-        const controls = new OrbitControls(camera, this.canvas)
-        controls.enableDamping = true
-        controls.minZoom = 0.5
-        controls.minDistance = 1
-        controls.maxDistance = 7.5
-        controls.minPolarAngle = Math.PI / 16
-        controls.maxPolarAngle = Math.PI / 2
-        controls.minAzimuthAngle = -Math.PI / 3
-        controls.maxAzimuthAngle = Math.PI / 3
-
-        // Light
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
-        this.scene.add(directionalLight);
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
-        this.scene.add(ambientLight);
-
-        function selectObject() {
-
-            raycaster.setFromCamera(pointer, camera);
-
-            // calculate objects intersecting the picking ray
-            const intersects = raycaster.intersectObject(this.scene.children, true);
-
-            if (intersects.length > 0) {
-
-                if (intersects[0].object.parent.name === "kitap_kitap_1_Cube001" || intersects[0].object.parent.name === "kitap_kitap_1_Cube003") {
-                    console.log('Lets read');
-                    window.location.href = "./textureUtils"
-                }
-                if (intersects[0].object.getObjectByName('Plane')) {
-                    console.log('Plane');
-                    window.location.href = "./editor"
-                }
-                if (intersects[0].object.parent.name === "Photoframe") {
-                    console.log("Yay Photoframe!!");
-                    window.location.href = ""
-                }
-                if (intersects[0].object.parent.name === "Headphone") {
-                    console.log("Relax with Music!!");
-                    window.location.href = ""
-                }
-            }
-        }
-
-        function hover(object) {
-            const tween = new TWEEN.Tween({ x: object.position.x, y: object.position.y, z: object.position.z })
-                .to({ x: object.position.x, y: object.position.y + 0.05, z: object.position.z }, 500)
-                .onUpdate(function (obj) {
-                    object.position.set(obj.x, obj.y, obj.z)
-                })
-
-            const tween0 = new TWEEN.Tween({ y: object.position.y + 0.2 })
-                .to({ y: object.position.y }, 1500)
-                .onUpdate(function (obj) {
-                    object.position.setY(obj.y)
-                })
-            // tween.yoyo = true
-            tween.chain(tween0)
-            tween0.chain(tween)
-            tween.start()
-            tween0.start()
-        }
+        renderer.setSize(sizes.width, sizes.height)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        renderer.physicallyCorrectLights = true
+        renderer.outputEncoding = THREE.sRGBEncoding
 
 
-        function onPointerMove(event) {
-
-            pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-            pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-        }
-
-
-        let zoom = controls.target.distanceTo(controls.object.position);
+        let zoom = this.controls.target.distanceTo(this.controls.object.position);
         let isScreenChanged = false;
 
         // Animation
@@ -203,27 +144,53 @@ export default class OfficeScene {
 
             // TWEEN.update()
 
+            this.camera.lookAt(position)
+            this.controls.target = position
 
-            camera.lookAt(position)
-            controls.target = position
-
-            this.renderer.render(this.scene, camera)
+            renderer.render(this.scene, this.camera)
 
             // Change monitor screen based on zoom
-            zoom = controls.target.distanceTo(controls.object.position)
-            if (zoom >= 1.06 && !isScreenChanged) {
+            zoom = this.controls.target.distanceTo(this.controls.object.position)
+            if (zoom > 1.5 && !isScreenChanged) {
                 isScreenChanged = true
                 this.updateTexture('/assets/office/FullScene/editorSS.png')
             }
-            if (zoom < 1.06 && isScreenChanged) {
+            if (zoom < 1.5 && isScreenChanged) {
                 isScreenChanged = false
                 this.updateTexture('/assets/office/FullScene/ash-edmonds-0aWZdK8nK2I-unsplash.jpg')
             }
+
             window.requestAnimationFrame(animationLoop)
         }
         // Also get more control over it using GSAP
+    }
 
-        animationLoop()
+    selectObject() {
+
+        this.raycaster.setFromCamera(this.pointer, this.camera);
+
+        // calculate objects intersecting the picking ray
+        const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+
+        if (intersects.length > 0) {
+
+            if (intersects[0].object.parent.name === "kitap_kitap_1_Cube001" || intersects[0].object.parent.name === "kitap_kitap_1_Cube003") {
+                console.log('Lets read');
+                window.location.href = "./textureUtils"
+            }
+            if (intersects[0].object.getObjectByName('Plane')) {
+                console.log('Plane');
+                window.location.href = "./editor"
+            }
+            if (intersects[0].object.parent.name === "Photoframe") {
+                console.log("Yay Photoframe!!");
+                window.location.href = "./imageConverter"
+            }
+            if (intersects[0].object.parent.name === "Headphone") {
+                console.log("Relax with Music!!");
+                window.location.href = ""
+            }
+        }
     }
 
     updateTexture(imgURL) {
@@ -234,5 +201,40 @@ export default class OfficeScene {
                 this.scene.getObjectByName('Plane').material.needsUpdate = true;
             }
         )
+    }
+
+    onPointerMove(event){
+        this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	    this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    }
+
+    onLoad() {
+        window.addEventListener('pointermove', (event)=>{
+            this.onPointerMove(event);
+        });
+
+        this.canvas.addEventListener('click', () => {
+            this.selectObject();
+        });
+
+        let isHomePageVisible = true;
+
+        window.addEventListener('scroll', () => {
+            let lastScrollPos = window.scrollY;
+            let scrollAmount = 700; // scroll amount needs to determined based responsiveness
+
+            if (lastScrollPos > scrollAmount && isHomePageVisible) {
+                isHomePageVisible = false;
+                this.onHideHomePage();
+            }
+            if (lastScrollPos < scrollAmount && !isHomePageVisible) {
+                isHomePageVisible = true;
+                this.onUnhideHomePage();
+            }
+        })
+    }
+
+    onAfterLoad() {
+
     }
 } 
