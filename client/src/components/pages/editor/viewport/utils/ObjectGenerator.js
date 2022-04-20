@@ -396,7 +396,7 @@ export default class ObjectGenerator {
         this.viewport.add(object);
     }
 
-    addObj(objFile, attachProperties = true, name='Obj'){
+    addObj(objFile, attachProperties = true, name='Obj', onAfterAdd){
         this.objLoader.load(
             objFile,
             (object)=>{
@@ -404,6 +404,7 @@ export default class ObjectGenerator {
                     this.attachPropertiesToObj(object, name);
                 }
                 this.viewport.add(object);
+                onAfterAdd(object);
             },
             (xhr)=>{
                 console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );

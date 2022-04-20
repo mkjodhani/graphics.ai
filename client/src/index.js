@@ -5,6 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './redux/store';
 import { Provider } from 'react-redux'
+import { AppProvider } from "@shopify/polaris";
+import enTranslations from "@shopify/polaris/locales/en.json";
+import "@shopify/polaris/build/esm/styles.css";
+
 import { PersistGate } from 'redux-persist/integration/react'
 // const root = ReactDOM.createRoot(document.getElementById("root"));
 // root.render(
@@ -20,7 +24,9 @@ import { PersistGate } from 'redux-persist/integration/react'
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <AppProvider i18n={enTranslations}>
+        <App />
+      </AppProvider>
     </PersistGate>
   </Provider>
   ,

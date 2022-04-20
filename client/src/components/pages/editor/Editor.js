@@ -73,9 +73,8 @@ export default class Editor{
         this.objectGenerator.addCube();
         this.objectGenerator.addAmbientLight();
         this.objectGenerator.cursorPoint = new Vector3(-4,3,2);
-        let directionalLight =  this.objectGenerator.addDirectionalLight();
+        this.objectGenerator.addDirectionalLight();
         this.objectGenerator.cursorPoint = new Vector3(0,0,0);
-        console.log(directionalLight);
     }
 
     bindCameraProperties(){
@@ -117,8 +116,17 @@ export default class Editor{
         addMeshFolder.add(this.objectGenerator, 'addCone').name('Cone');
         addMeshFolder.add(this.objectGenerator, 'addTorus').name('Torus');
         addMeshFolder.add(this.objectGenerator, 'addText').name('Text');
-        this.loadHelicopter = ()=>{
-            this.objectGenerator.addObj('./assets/editor/models/Seahawk.obj', 'Helicopter');
+        this.loadHelicopter = () => {
+            this.objectGenerator.addObj(
+                './assets/editor/models/Seahawk.obj',
+                true,
+                'Helicopter',
+                (helicopter) => {
+                    helicopter.scale.x *= 0.1;
+                    helicopter.scale.y *= 0.1;
+                    helicopter.scale.z *= 0.1;
+                }
+            );
         };
         addOptionFolder.add(this, 'loadHelicopter').name('Helicopter');
         addOptionFolder.add(this.objectGenerator, 'addCamera').name('Camera');

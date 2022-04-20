@@ -1,0 +1,28 @@
+[debug] [2022-04-20T07:10:25.851Z] ----------------------------------------------------------------------
+[debug] [2022-04-20T07:10:25.852Z] Command:       /usr/bin/node /usr/local/bin/firebase serve --only hosting
+[debug] [2022-04-20T07:10:25.852Z] CLI Version:   10.7.0
+[debug] [2022-04-20T07:10:25.853Z] Platform:      linux
+[debug] [2022-04-20T07:10:25.853Z] Node Version:  v16.14.1
+[debug] [2022-04-20T07:10:25.853Z] Time:          Wed Apr 20 2022 12:40:25 GMT+0530 (India Standard Time)
+[debug] [2022-04-20T07:10:25.853Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-04-20T07:10:25.903Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-04-20T07:10:25.903Z] > authorizing via signed-in user (joshiprashant.jp25@gmail.com)
+[debug] [2022-04-20T07:10:25.903Z] [iam] checking project graphicsai for permissions ["firebase.projects.get"]
+[debug] [2022-04-20T07:10:25.905Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/graphicsai:testIamPermissions [none]
+[debug] [2022-04-20T07:10:25.905Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/graphicsai:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-04-20T07:10:27.943Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/graphicsai:testIamPermissions 200
+[debug] [2022-04-20T07:10:27.943Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/graphicsai:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2022-04-20T07:10:27.945Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai [none]
+[debug] [2022-04-20T07:10:29.777Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai 200
+[debug] [2022-04-20T07:10:29.778Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai {"projectId":"graphicsai","projectNumber":"502849556607","displayName":"graphicsAI","name":"projects/graphicsai","resources":{"hostingSite":"graphicsai","realtimeDatabaseInstance":"graphicsai-default-rtdb"},"state":"ACTIVE"}
+[debug] [2022-04-20T07:10:29.779Z] >>> [apiv2][query] GET https://firebasehosting.googleapis.com/v1beta1/projects/graphicsai/sites 
+[debug] [2022-04-20T07:10:32.030Z] <<< [apiv2][status] GET https://firebasehosting.googleapis.com/v1beta1/projects/graphicsai/sites 200
+[debug] [2022-04-20T07:10:32.031Z] <<< [apiv2][body] GET https://firebasehosting.googleapis.com/v1beta1/projects/graphicsai/sites {"sites":[{"name":"projects/502849556607/sites/graphicsai","defaultUrl":"https://graphicsai.web.app","appId":"1:502849556607:web:3cff0de24b310a4a5baf4a","type":"DEFAULT_SITE"}]}
+[debug] [2022-04-20T07:10:32.032Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai/webApps/1:502849556607:web:3cff0de24b310a4a5baf4a/config [none]
+[debug] [2022-04-20T07:10:34.074Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai/webApps/1:502849556607:web:3cff0de24b310a4a5baf4a/config 200
+[debug] [2022-04-20T07:10:34.074Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/graphicsai/webApps/1:502849556607:web:3cff0de24b310a4a5baf4a/config {"projectId":"graphicsai","appId":"1:502849556607:web:3cff0de24b310a4a5baf4a","databaseURL":"https://graphicsai-default-rtdb.firebaseio.com","storageBucket":"graphicsai.appspot.com","apiKey":"AIzaSyDEFnENDGFAtF55OCixTNXztONEESnV6pY","authDomain":"graphicsai.firebaseapp.com","messagingSenderId":"502849556607","measurementId":"G-LC35C3SH5K"}
+[info] i  hosting: Serving hosting files from: build {"metadata":{"emulator":{"name":"hosting"},"message":"Serving hosting files from: \u001b[1mbuild\u001b[22m"}}
+[info] ✔  hosting: Local server: http://localhost:5000 {"metadata":{"emulator":{"name":"hosting"},"message":"Local server: \u001b[4m\u001b[1mhttp://localhost:5000\u001b[22m\u001b[24m"}}
+[info] i  hosting: 127.0.0.1 - - [20/Apr/2022:07:10:41 +0000] "GET / HTTP/1.1" 404 139 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [20/Apr/2022:07:10:41 +0000] \"GET / HTTP/1.1\" 404 139 \"-\" \"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0\""}}
+[info] i  hosting: 127.0.0.1 - - [20/Apr/2022:07:10:44 +0000] "GET / HTTP/1.1" 404 139 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" {"metadata":{"emulator":{"name":"hosting"},"message":"127.0.0.1 - - [20/Apr/2022:07:10:44 +0000] \"GET / HTTP/1.1\" 404 139 \"-\" \"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0\""}}

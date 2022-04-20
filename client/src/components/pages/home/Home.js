@@ -8,12 +8,14 @@ import ProductHowItWorks from './modules/views/ProductHowItWorks';
 import ProductCTA from './modules/views/ProductCTA';
 import AppAppBar from './modules/views/AppAppBar';
 import withRoot from './modules/withRoot';
+import OfficeComponent from './3Dview/OfficeComponent';
 
 function Home() {
   return (
     <React.Fragment>
       <AppAppBar />
       <ProductHero />
+      <OfficeComponent/>
       <ProductValues />
       <ProductCategories />
       <ProductHowItWorks />

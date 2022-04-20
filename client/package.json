@@ -27,17 +27,8 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.4.1",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "three": "^0.139.2",
-=======
-    "three": "^0.124.0",
-    "tui-image-editor": "^3.15.2",
->>>>>>> f2dc8089225f47dbc6e4f7003a05f2ccc76808b5
-=======
     "three": "^0.139.2",
     "tui-image-editor": "^3.15.2",
->>>>>>> 131c48cc4be4cdd370611b328ce4ee9b5524d8e1
     "web-vitals": "^2.1.4"
   },
   "scripts": {
