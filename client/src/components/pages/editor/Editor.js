@@ -2,6 +2,7 @@ import Viewport from './viewport/Viewport';
 import * as dat from 'dat.gui';
 import ToolBox from './tools/ToolBox';
 import ObjectGenerator from './viewport/utils/ObjectGenerator';
+import {OBJExporter} from 'three/examples/jsm/exporters/OBJExporter';
 import CameraSelector from './viewport/CameraSelector';
 import { Vector3 } from 'three';
 
@@ -67,6 +68,23 @@ export default class Editor{
             if(this.renderMode)
                 this.propertiesPane.close();
         });
+
+        //add export to obj option
+        this.propertiesPane.add(this, 'exportToObj').name('Export(.obj)');
+    }
+
+    exportToObj(){
+        let objExporter = new OBJExporter();
+        //FIXME: export scene without helpers
+        const data = objExporter.parse(this.viewport);
+        this.downloadFile(data, "graphicsAI-exported.obj");
+    }
+
+    downloadFile(data, fileName){
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(new Blob([data], {'type':'text/plain'}));
+        downloadLink.download = fileName;
+        downloadLink.click();
     }
 
     initObjects(){
