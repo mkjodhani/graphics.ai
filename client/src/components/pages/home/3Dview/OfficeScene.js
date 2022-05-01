@@ -47,7 +47,7 @@ export default class OfficeScene {
 
         })
 
-        window.addEventListener('dblclick', () => {
+        canvas.addEventListener('dblclick', () => {
             const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement
             if (!fullscreenElement) {
                 if (canvas.requestFullscreen())
@@ -89,6 +89,7 @@ export default class OfficeScene {
 
         // Light
         const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+        directionalLight.position.set(12, 71, 80)
         this.scene.add(directionalLight);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.5)
@@ -227,10 +228,41 @@ export default class OfficeScene {
             }
         )
     }
-
+    
+    enablePointer(){
+        this.canvas.style.cursor = 'pointer';
+    }
+    disablePointer(){
+        this.canvas.style.cursor = 'default';
+    }
     onPointerMove(event) {
         this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+        this.raycaster.setFromCamera(this.pointer, this.camera);
+
+        // calculate objects intersecting the picking ray
+        const intersects = this.raycaster.intersectObjects(this.scene.children, true);
+
+        if (intersects.length > 0) {
+
+            if (intersects[0].object.parent.name === "kitap_kitap_1_Cube001" || intersects[0].object.parent.name === "kitap_kitap_1_Cube003") {
+                this.enablePointer();
+            }
+            else if (intersects[0].object.getObjectByName('Plane')) {
+                this.enablePointer();
+            }
+            else if (intersects[0].object.parent.name === "Photoframe") {
+                this.enablePointer();
+            }
+            else if (intersects[0].object.parent.name === "Headphone") {
+                this.enablePointer();
+            } else {
+                this.disablePointer();
+            }
+        } else {
+            this.disablePointer();
+        }
     }
 
     onLoad() {
