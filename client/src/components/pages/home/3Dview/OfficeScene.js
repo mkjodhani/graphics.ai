@@ -87,12 +87,6 @@ export default class OfficeScene {
         this.controls.minAzimuthAngle = -Math.PI / 3
         this.controls.maxAzimuthAngle = Math.PI / 3
 
-        this.controls.addEventListener('end', (event)=>{
-            if(this.controls.getDistance() >= this.controls.maxDistance || this.controls.getDistance() === this.controls.minDistance){
-                this.controls.enableZoom = false;
-            }
-        });
-
         // Light
         const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
         this.scene.add(directionalLight);
@@ -165,6 +159,37 @@ export default class OfficeScene {
         // Also get more control over it using GSAP
     }
 
+    handleScrollMovement() {
+        this.scrollDirection = 'down';
+        this.onScrollDirectionAction = () => {
+            if (this.oldScroll <= window.scrollY) {   //down-scroll
+                this.scrollDirection = 'down';
+                if (this.controls.getDistance() >= this.controls.maxDistance) {
+                    this.controls.enableZoom = false;
+                } else {
+                    this.controls.enableZoom = true;
+                }
+            } else {        //up-scroll
+                this.scrollDirection = 'up';
+                if (this.controls.getDistance() === this.controls.minDistance) {
+                    this.controls.enableZoom = false;
+                } else {
+                    this.controls.enableZoom = true;
+                }
+            }
+            this.oldScroll = window.scrollY;
+        }
+        window.addEventListener("wheel", this.onScrollDirectionAction, false);
+    }
+
+    onEnableZoom() {
+        this.controls.enableZoom = true;
+    }
+
+    onDisableZoom() {
+        this.controls.enableZoom = true;
+    }
+
     selectObject() {
 
         this.raycaster.setFromCamera(this.pointer, this.camera);
@@ -203,13 +228,13 @@ export default class OfficeScene {
         )
     }
 
-    onPointerMove(event){
-        this.pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-	    this.pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    onPointerMove(event) {
+        this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
     }
 
     onLoad() {
-        window.addEventListener('pointermove', (event)=>{
+        window.addEventListener('pointermove', (event) => {
             this.onPointerMove(event);
         });
 
@@ -217,24 +242,22 @@ export default class OfficeScene {
             this.selectObject();
         });
 
-        let isHomePageVisible = true;
+        this.handleScrollMovement();
 
-        window.addEventListener('scroll', () => {
-            let lastScrollPos = window.scrollY;
-            let scrollAmount = 700; // scroll amount needs to determined based responsiveness
+        // let isHomePageVisible = true;
 
-            if (lastScrollPos > scrollAmount && isHomePageVisible) {
-                isHomePageVisible = false;
-                this.onHideHomePage();
-            }
-            if (lastScrollPos < scrollAmount && !isHomePageVisible) {
-                isHomePageVisible = true;
-                this.onUnhideHomePage();
-            }
-        })
-    }
+        // window.addEventListener('scroll', () => {
+        //     let lastScrollPos = window.scrollY;
+        //     let scrollAmount = 700; // scroll amount needs to determined based responsiveness
 
-    onAfterLoad() {
-
+        //     if (lastScrollPos > scrollAmount && isHomePageVisible) {
+        //         isHomePageVisible = false;
+        //         this.onHideHomePage();
+        //     }
+        //     if (lastScrollPos < scrollAmount && !isHomePageVisible) {
+        //         isHomePageVisible = true;
+        //         this.onUnhideHomePage();
+        //     }
+        // })
     }
 } 
